@@ -1,0 +1,17 @@
+# .NET / Blazor build output
+EwsRiskDashboard/bin/
+EwsRiskDashboard/obj/
+**/bin/
+**/obj/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Claude Code local session config (machine-specific permissions)
+.claude/settings.local.json
+
+# OS
+.DS_Store

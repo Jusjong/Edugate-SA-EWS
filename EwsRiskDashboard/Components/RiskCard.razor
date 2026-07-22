@@ -1,0 +1,96 @@
+@* Shared card: same visual language for both the convenor and advisor views
+   (design principle: two audiences, one visual language), different data shape
+   supplied by the caller via Subtitle/Factors. *@
+
+<div class="card" style="--tier-color:var(--risk-@Tier); --tier-bg:var(--risk-@(Tier)-bg); @(HasCardClick ? "cursor:pointer;" : "")" @onclick="OnCardClick">
+    <button class="flag-btn @(IsFlagged ? "flagged" : "")"
+            title="Flag for manual follow-up"
+            aria-label="Flag @Id for follow-up"
+            @onclick="OnToggleFlag" @onclick:stopPropagation="true">⚑</button>
+
+    <div class="card-top">
+        <div>
+            <div class="card-id">@Id</div>
+            <div class="card-sub">@Subtitle</div>
+            @if (PaceBadge is not null)
+            {
+                <div class="pace-badge @(PaceOverdue ? "overdue" : "")">@PaceBadge</div>
+            }
+        </div>
+        <span class="tier-chip">@TierLabel</span>
+    </div>
+
+    <div class="risk-row">
+        <span class="risk-num">@Risk.ToString("0")</span><span class="risk-max">/100</span>
+        <span class="risk-label">risk score</span>
+    </div>
+
+    <ul class="factors">
+        @foreach (var f in Factors)
+        {
+            <li>
+                @if (f.Direction == "increases")
+                {
+                    <span class="arrow-up">▲</span>
+                }
+                else
+                {
+                    <span class="arrow-down">▼</span>
+                }
+                <span class="flabel">@f.Label</span>
+                @if (f.Value is not null)
+                {
+                    <span class="fval">now @f.Value</span>
+                }
+            </li>
+        }
+    </ul>
+
+    @if (SecondaryTier is not null)
+    {
+        <div class="secondary-risk" style="--tier-color:var(--risk-@SecondaryTier);">
+            <span class="secondary-label">@SecondaryLabel</span>
+            <span class="secondary-num">@SecondaryRisk?.ToString("0")<span class="risk-max">/100</span></span>
+        </div>
+    }
+
+    <div class="card-actions" @onclick:stopPropagation="true">
+        <button class="btn btn-primary" disabled="@IsLogged" @onclick="OnLogIntervention">
+            @(IsLogged ? "✓ Logged" : "Log intervention")
+        </button>
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Id { get; set; } = "";
+    [Parameter, EditorRequired] public string Subtitle { get; set; } = "";
+    [Parameter, EditorRequired] public double Risk { get; set; }
+    [Parameter, EditorRequired] public string Tier { get; set; } = "low";
+    [Parameter, EditorRequired] public List<RiskFactor> Factors { get; set; } = [];
+    [Parameter] public bool IsFlagged { get; set; }
+    [Parameter] public bool IsLogged { get; set; }
+    [Parameter] public EventCallback OnToggleFlag { get; set; }
+    [Parameter] public EventCallback OnLogIntervention { get; set; }
+    [Parameter] public EventCallback OnCardClick { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool HasCardClick => OnCardClick.HasDelegate;
+
+    // Optional pace fact (e.g. "Year 3 of 3") — a computed, non-model fact, not a score.
+    [Parameter] public string? PaceBadge { get; set; }
+    [Parameter] public bool PaceOverdue { get; set; }
+
+    // Optional secondary score (e.g. delayed-graduation risk) shown under the factors.
+    [Parameter] public string? SecondaryLabel { get; set; }
+    [Parameter] public double? SecondaryRisk { get; set; }
+    [Parameter] public string? SecondaryTier { get; set; }
+
+    private string TierLabel => Tier switch
+    {
+        "critical" => "Critical",
+        "high" => "High risk",
+        "medium" => "Medium risk",
+        _ => "Low risk",
+    };
+}

@@ -1,0 +1,19 @@
+@inherits LayoutComponentBase
+
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">EWS</span>
+            <span class="brand-name">Early Warning System <em>— risk dashboard</em></span>
+        </div>
+        <nav class="mode-nav">
+            <NavLink href="advisor" Match="NavLinkMatch.All">Advisor · Caseload</NavLink>
+            <NavLink href="convenor">Convenor · Module</NavLink>
+        </nav>
+        <span class="proto-badge">Prototype build — synthetic data only</span>
+    </header>
+
+    <main class="app-main">
+        @Body
+    </main>
+</div>

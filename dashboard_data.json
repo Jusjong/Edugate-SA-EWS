@@ -1,0 +1,1841 @@
+{
+  "convenor": {
+    "module": "COM102",
+    "students": [
+      {
+        "id": "SYN100833",
+        "module": "COM102",
+        "attendance": 0.0,
+        "submission": 4.0,
+        "formative": 15.0,
+        "risk": 93.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 14.9
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 0.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "id": "SYN101940",
+        "module": "COM102",
+        "attendance": 5.0,
+        "submission": 9.0,
+        "formative": 23.0,
+        "risk": 89.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 22.8
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 5.4
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          }
+        ]
+      },
+      {
+        "id": "SYN101737",
+        "module": "COM102",
+        "attendance": 0.0,
+        "submission": 10.0,
+        "formative": 25.0,
+        "risk": 88.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 25.4
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 0.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          }
+        ]
+      },
+      {
+        "id": "SYN100181",
+        "module": "COM102",
+        "attendance": 0.0,
+        "submission": 5.0,
+        "formative": 30.0,
+        "risk": 87.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 29.9
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 0.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          }
+        ]
+      },
+      {
+        "id": "SYN100854",
+        "module": "COM102",
+        "attendance": 16.0,
+        "submission": 6.0,
+        "formative": 22.0,
+        "risk": 87.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 22.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 16.2
+          }
+        ]
+      },
+      {
+        "id": "SYN100662",
+        "module": "COM102",
+        "attendance": 0.0,
+        "submission": 0.0,
+        "formative": 33.0,
+        "risk": 87.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 33.4
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 0.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "id": "SYN101096",
+        "module": "COM102",
+        "attendance": 23.0,
+        "submission": 9.0,
+        "formative": 20.0,
+        "risk": 86.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 20.4
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 22.7
+          }
+        ]
+      },
+      {
+        "id": "SYN101624",
+        "module": "COM102",
+        "attendance": 0.0,
+        "submission": 10.0,
+        "formative": 33.0,
+        "risk": 85.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 32.7
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 0.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          }
+        ]
+      },
+      {
+        "id": "SYN100228",
+        "module": "COM102",
+        "attendance": 0.0,
+        "submission": 0.0,
+        "formative": 37.0,
+        "risk": 85.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 37.0
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 0.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "id": "SYN101644",
+        "module": "COM102",
+        "attendance": 2.0,
+        "submission": 0.0,
+        "formative": 37.0,
+        "risk": 84.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 37.3
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 1.7
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "id": "SYN100251",
+        "module": "COM102",
+        "attendance": 0.0,
+        "submission": 13.0,
+        "formative": 35.0,
+        "risk": 83.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 35.2
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 0.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          }
+        ]
+      },
+      {
+        "id": "SYN101653",
+        "module": "COM102",
+        "attendance": 0.0,
+        "submission": 21.0,
+        "formative": 32.0,
+        "risk": 83.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 32.2
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 0.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "id": "SYN100277",
+        "module": "COM102",
+        "attendance": 17.0,
+        "submission": 14.0,
+        "formative": 27.0,
+        "risk": 83.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 27.3
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 17.4
+          }
+        ]
+      },
+      {
+        "id": "SYN101214",
+        "module": "COM102",
+        "attendance": 23.0,
+        "submission": 9.0,
+        "formative": 27.0,
+        "risk": 83.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Formative marks",
+            "direction": "increases",
+            "value": 27.0
+          },
+          {
+            "label": "Assignment submissions",
+            "direction": "increases",
+            "value": 0.1
+          },
+          {
+            "label": "Attendance",
+            "direction": "increases",
+            "value": 22.9
+          }
+        ]
+      }
+    ]
+  },
+  "advisor": {
+    "students": [
+      {
+        "id": "SYN101117",
+        "programme": "BSc Physiotherapy",
+        "quintile": 2,
+        "nsfas": true,
+        "fundingDisruption": true,
+        "yearOfStudy": 6,
+        "minYearsToComplete": 4,
+        "risk": 81.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Funding disruption this year",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT academic literacy",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          }
+        ],
+        "delayedGradRisk": 99.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT mathematics",
+            "direction": "decreases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "HEA401",
+            "attendance": 18.0,
+            "submission": 4.0,
+            "formative": 43.0,
+            "risk": 75.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.0
+              },
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 42.9
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 18.2
+              }
+            ]
+          },
+          {
+            "module": "HEA402",
+            "attendance": 38.0,
+            "submission": 19.0,
+            "formative": 55.0,
+            "risk": 69.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 29.1
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.2
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 38.5
+              }
+            ]
+          },
+          {
+            "module": "HEA403",
+            "attendance": 23.0,
+            "submission": 31.0,
+            "formative": 58.0,
+            "risk": 58.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 23.4
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 47.0
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.3
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN100681",
+        "programme": "Bachelor of Commerce",
+        "quintile": 2,
+        "nsfas": true,
+        "fundingDisruption": true,
+        "yearOfStudy": 7,
+        "minYearsToComplete": 5,
+        "risk": 76.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Funding disruption this year",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "increases"
+          }
+        ],
+        "delayedGradRisk": 98.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "APS score",
+            "direction": "decreases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "COM402",
+            "attendance": 0.0,
+            "submission": 0.0,
+            "formative": 49.0,
+            "risk": 86.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 0.0
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.0
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 42.6
+              }
+            ]
+          },
+          {
+            "module": "COM403",
+            "attendance": 0.0,
+            "submission": 13.0,
+            "formative": 34.0,
+            "risk": 83.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 34.2
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 0.0
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "module": "COM401",
+            "attendance": 0.0,
+            "submission": 30.0,
+            "formative": 39.0,
+            "risk": 75.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 0.4
+              },
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 39.3
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.3
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN101277",
+        "programme": "Higher Certificate in Management Development",
+        "quintile": 1,
+        "nsfas": false,
+        "fundingDisruption": false,
+        "yearOfStudy": 3,
+        "minYearsToComplete": 1,
+        "risk": 73.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT academic literacy",
+            "direction": "increases"
+          }
+        ],
+        "delayedGradRisk": 100.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "Programme minimum duration",
+            "direction": "increases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "COM302",
+            "attendance": 0.0,
+            "submission": 13.0,
+            "formative": 57.0,
+            "risk": 77.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 0.0
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.1
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 42.9
+              }
+            ]
+          },
+          {
+            "module": "COM303",
+            "attendance": 16.0,
+            "submission": 17.0,
+            "formative": 40.0,
+            "risk": 73.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 39.6
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 16.3
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.2
+              }
+            ]
+          },
+          {
+            "module": "COM304",
+            "attendance": 37.0,
+            "submission": 23.0,
+            "formative": 44.0,
+            "risk": 66.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 44.3
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.2
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 52.4
+              }
+            ]
+          },
+          {
+            "module": "COM301",
+            "attendance": 54.0,
+            "submission": 35.0,
+            "formative": 50.0,
+            "risk": 40.0,
+            "tier": "medium",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 50.0
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.3
+              },
+              {
+                "label": "Engagement consistency",
+                "direction": "decreases",
+                "value": 1.0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN101400",
+        "programme": "BA Languages",
+        "quintile": 1,
+        "nsfas": true,
+        "fundingDisruption": true,
+        "yearOfStudy": 5,
+        "minYearsToComplete": 3,
+        "risk": 72.0,
+        "tier": "critical",
+        "factors": [
+          {
+            "label": "Funding disruption this year",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "decreases"
+          }
+        ],
+        "delayedGradRisk": 92.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "APS score",
+            "direction": "decreases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "HUM403",
+            "attendance": 35.0,
+            "submission": 43.0,
+            "formative": 48.0,
+            "risk": 61.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 42.3
+              },
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 48.0
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 35.4
+              }
+            ]
+          },
+          {
+            "module": "HUM402",
+            "attendance": 56.0,
+            "submission": 65.0,
+            "formative": 38.0,
+            "risk": 39.0,
+            "tier": "medium",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 37.8
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.7
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 55.6
+              }
+            ]
+          },
+          {
+            "module": "HUM401",
+            "attendance": 46.0,
+            "submission": 40.0,
+            "formative": 64.0,
+            "risk": 29.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.4
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 45.9
+              },
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 63.6
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN101637",
+        "programme": "BSc Physics",
+        "quintile": 2,
+        "nsfas": true,
+        "fundingDisruption": false,
+        "yearOfStudy": 5,
+        "minYearsToComplete": 3,
+        "risk": 69.0,
+        "tier": "high",
+        "factors": [
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT academic literacy",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          }
+        ],
+        "delayedGradRisk": 95.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT mathematics",
+            "direction": "decreases"
+          },
+          {
+            "label": "APS score",
+            "direction": "decreases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "SCI401",
+            "attendance": 11.0,
+            "submission": 27.0,
+            "formative": 54.0,
+            "risk": 59.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 11.0
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.3
+              },
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 53.5
+              }
+            ]
+          },
+          {
+            "module": "SCI403",
+            "attendance": 47.0,
+            "submission": 31.0,
+            "formative": 62.0,
+            "risk": 34.0,
+            "tier": "medium",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.3
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 47.0
+              },
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 62.4
+              }
+            ]
+          },
+          {
+            "module": "SCI402",
+            "attendance": 67.0,
+            "submission": 82.0,
+            "formative": 70.0,
+            "risk": 9.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.8
+              },
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 70.2
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 66.8
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN101932",
+        "programme": "BSc Computer Science",
+        "quintile": 3,
+        "nsfas": true,
+        "fundingDisruption": true,
+        "yearOfStudy": 5,
+        "minYearsToComplete": 3,
+        "risk": 68.0,
+        "tier": "high",
+        "factors": [
+          {
+            "label": "Funding disruption this year",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT academic literacy",
+            "direction": "increases"
+          }
+        ],
+        "delayedGradRisk": 89.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT mathematics",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "SCI401",
+            "attendance": 12.0,
+            "submission": 0.0,
+            "formative": 19.0,
+            "risk": 93.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 19.3
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.0
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 12.5
+              }
+            ]
+          },
+          {
+            "module": "SCI403",
+            "attendance": 1.0,
+            "submission": 4.0,
+            "formative": 19.0,
+            "risk": 91.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 18.8
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 1.2
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.0
+              }
+            ]
+          },
+          {
+            "module": "SCI402",
+            "attendance": 21.0,
+            "submission": 13.0,
+            "formative": 30.0,
+            "risk": 80.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 30.1
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.1
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 21.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN100130",
+        "programme": "BSc Nursing",
+        "quintile": 1,
+        "nsfas": true,
+        "fundingDisruption": false,
+        "yearOfStudy": 6,
+        "minYearsToComplete": 4,
+        "risk": 68.0,
+        "tier": "high",
+        "factors": [
+          {
+            "label": "Matric aggregate",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT academic literacy",
+            "direction": "increases"
+          }
+        ],
+        "delayedGradRisk": 96.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "APS score",
+            "direction": "decreases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "HEA403",
+            "attendance": 20.0,
+            "submission": 0.0,
+            "formative": 48.0,
+            "risk": 79.0,
+            "tier": "critical",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.0
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 19.9
+              },
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 48.3
+              }
+            ]
+          },
+          {
+            "module": "HEA401",
+            "attendance": 24.0,
+            "submission": 15.0,
+            "formative": 58.0,
+            "risk": 65.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.1
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 23.8
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 45.5
+              }
+            ]
+          },
+          {
+            "module": "HEA402",
+            "attendance": 27.0,
+            "submission": 24.0,
+            "formative": 57.0,
+            "risk": 60.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 26.6
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.2
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 50.6
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN100340",
+        "programme": "BSc Physiotherapy",
+        "quintile": 2,
+        "nsfas": true,
+        "fundingDisruption": true,
+        "yearOfStudy": 6,
+        "minYearsToComplete": 4,
+        "risk": 67.0,
+        "tier": "high",
+        "factors": [
+          {
+            "label": "Funding disruption this year",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "decreases"
+          }
+        ],
+        "delayedGradRisk": 50.0,
+        "delayedGradTier": "medium",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          },
+          {
+            "label": "APS score",
+            "direction": "decreases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "HEA403",
+            "attendance": 47.0,
+            "submission": 35.0,
+            "formative": 46.0,
+            "risk": 58.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 46.2
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 47.5
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.3
+              }
+            ]
+          },
+          {
+            "module": "HEA402",
+            "attendance": 55.0,
+            "submission": 66.0,
+            "formative": 50.0,
+            "risk": 28.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 50.4
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.7
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 55.2
+              }
+            ]
+          },
+          {
+            "module": "HEA401",
+            "attendance": 49.0,
+            "submission": 59.0,
+            "formative": 62.0,
+            "risk": 22.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.6
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "decreases",
+                "value": 69.9
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 49.2
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN100734",
+        "programme": "BEd Foundation Phase",
+        "quintile": 2,
+        "nsfas": true,
+        "fundingDisruption": false,
+        "yearOfStudy": 6,
+        "minYearsToComplete": 4,
+        "risk": 67.0,
+        "tier": "high",
+        "factors": [
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT academic literacy",
+            "direction": "increases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          }
+        ],
+        "delayedGradRisk": 100.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "NBT mathematics",
+            "direction": "decreases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "increases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "EDU401",
+            "attendance": 8.0,
+            "submission": 29.0,
+            "formative": 45.0,
+            "risk": 68.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 8.1
+              },
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 45.0
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.3
+              }
+            ]
+          },
+          {
+            "module": "EDU403",
+            "attendance": 27.0,
+            "submission": 10.0,
+            "formative": 47.0,
+            "risk": 66.0,
+            "tier": "high",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.1
+              },
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 47.4
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 26.7
+              }
+            ]
+          },
+          {
+            "module": "EDU402",
+            "attendance": 20.0,
+            "submission": 38.0,
+            "formative": 60.0,
+            "risk": 49.0,
+            "tier": "medium",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 20.0
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 56.7
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.4
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN101324",
+        "programme": "BSc Physics",
+        "quintile": 5,
+        "nsfas": false,
+        "fundingDisruption": false,
+        "yearOfStudy": 5,
+        "minYearsToComplete": 3,
+        "risk": 4.0,
+        "tier": "low",
+        "factors": [
+          {
+            "label": "NBT academic literacy",
+            "direction": "decreases"
+          },
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "decreases"
+          },
+          {
+            "label": "Matric aggregate",
+            "direction": "decreases"
+          }
+        ],
+        "delayedGradRisk": 57.0,
+        "delayedGradTier": "high",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "English additional language",
+            "direction": "decreases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "decreases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "SCI403",
+            "attendance": 50.0,
+            "submission": 44.0,
+            "formative": 51.0,
+            "risk": 39.0,
+            "tier": "medium",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 50.6
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "increases",
+                "value": 0.4
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 50.3
+              }
+            ]
+          },
+          {
+            "module": "SCI402",
+            "attendance": 70.0,
+            "submission": 86.0,
+            "formative": 63.0,
+            "risk": 11.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.9
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 70.4
+              },
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 62.6
+              }
+            ]
+          },
+          {
+            "module": "SCI401",
+            "attendance": 72.0,
+            "submission": 72.0,
+            "formative": 62.0,
+            "risk": 10.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.7
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "decreases",
+                "value": 81.9
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 72.4
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN100213",
+        "programme": "BSc Physics",
+        "quintile": 5,
+        "nsfas": true,
+        "fundingDisruption": false,
+        "yearOfStudy": 5,
+        "minYearsToComplete": 3,
+        "risk": 6.0,
+        "tier": "low",
+        "factors": [
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "decreases"
+          },
+          {
+            "label": "School quintile",
+            "direction": "decreases"
+          },
+          {
+            "label": "NBT academic literacy",
+            "direction": "decreases"
+          }
+        ],
+        "delayedGradRisk": 34.0,
+        "delayedGradTier": "medium",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "APS score",
+            "direction": "increases"
+          },
+          {
+            "label": "English additional language",
+            "direction": "decreases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "SCI403",
+            "attendance": 83.0,
+            "submission": 72.0,
+            "formative": 81.0,
+            "risk": 4.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 80.9
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 82.9
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.7
+              }
+            ]
+          },
+          {
+            "module": "SCI402",
+            "attendance": 100.0,
+            "submission": 90.0,
+            "formative": 85.0,
+            "risk": 2.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 85.2
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 100.0
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.9
+              }
+            ]
+          },
+          {
+            "module": "SCI401",
+            "attendance": 100.0,
+            "submission": 83.0,
+            "formative": 99.0,
+            "risk": 1.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 99.0
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 100.0
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "decreases",
+                "value": 100.0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SYN100198",
+        "programme": "Higher Certificate in Management Development",
+        "quintile": 4,
+        "nsfas": true,
+        "fundingDisruption": false,
+        "yearOfStudy": 3,
+        "minYearsToComplete": 1,
+        "risk": 8.0,
+        "tier": "low",
+        "factors": [
+          {
+            "label": "NBT academic literacy",
+            "direction": "decreases"
+          },
+          {
+            "label": "NBT quantitative literacy",
+            "direction": "decreases"
+          },
+          {
+            "label": "NSFAS eligible",
+            "direction": "decreases"
+          }
+        ],
+        "delayedGradRisk": 94.0,
+        "delayedGradTier": "critical",
+        "delayedGradFactors": [
+          {
+            "label": "Cumulative credit pace",
+            "direction": "increases"
+          },
+          {
+            "label": "Programme minimum duration",
+            "direction": "increases"
+          },
+          {
+            "label": "NSFAS eligible",
+            "direction": "decreases"
+          }
+        ],
+        "modules": [
+          {
+            "module": "COM303",
+            "attendance": 56.0,
+            "submission": 71.0,
+            "formative": 49.0,
+            "risk": 25.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "increases",
+                "value": 48.7
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.7
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "decreases",
+                "value": 71.6
+              }
+            ]
+          },
+          {
+            "module": "COM304",
+            "attendance": 45.0,
+            "submission": 45.0,
+            "formative": 64.0,
+            "risk": 24.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Prerequisite grade",
+                "direction": "decreases",
+                "value": 76.2
+              },
+              {
+                "label": "Attendance",
+                "direction": "increases",
+                "value": 44.7
+              },
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 63.7
+              }
+            ]
+          },
+          {
+            "module": "COM302",
+            "attendance": 82.0,
+            "submission": 63.0,
+            "formative": 67.0,
+            "risk": 15.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 82.5
+              },
+              {
+                "label": "Prerequisite grade",
+                "direction": "increases",
+                "value": 54.2
+              },
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 67.1
+              }
+            ]
+          },
+          {
+            "module": "COM301",
+            "attendance": 70.0,
+            "submission": 54.0,
+            "formative": 70.0,
+            "risk": 14.0,
+            "tier": "low",
+            "factors": [
+              {
+                "label": "Formative marks",
+                "direction": "decreases",
+                "value": 69.8
+              },
+              {
+                "label": "Attendance",
+                "direction": "decreases",
+                "value": 69.5
+              },
+              {
+                "label": "Assignment submissions",
+                "direction": "decreases",
+                "value": 0.5
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

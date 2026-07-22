@@ -1,0 +1,73 @@
+table,field,type_range,description
+students,student_id,string,Synthetic anonymous identifier (no real student data)
+students,cohort_year,int,Simulated year of first enrolment
+students,faculty,string,Faculty
+students,programme,string,Programme/qualification title
+students,saqa_id,int or blank,"SAQA National Learners' Records Database qualification ID, where SAQA-verified (blank for HEQSF-standard entries)"
+students,nqf_level,int,NQF level of the qualification
+students,min_credits,int,"Minimum credits to complete, per SAQA registration or HEQSF-standard convention"
+students,min_years_to_complete,int,"Minimum duration in years (min_credits / 120, HEQSF convention) — basis for the delayed_graduation_label"
+students,qualification_source,SAQA-verified/HEQSF-standard,Whether min_credits came from an actual SAQA NLRD lookup or a documented HEQSF-standard assumption
+students,school_quintile,int 1-5,"School quintile at matriculation (1=most under-resourced, 5=least). See EWS design Sec. 5.1"
+students,first_gen_flag,0/1,No parent/guardian holds a university qualification
+students,home_language_eal_flag,0/1,English as an additional language
+students,geographic_origin,rural/urban,Self-reported origin
+students,nbt_academic_literacy,0-100,National Benchmark Test — Academic Literacy domain
+students,nbt_quantitative_literacy,0-100,NBT — Quantitative Literacy domain
+students,nbt_mathematics,0-100,NBT — Mathematics domain
+students,nsc_mathematics_pct,0-100,NSC/matric Mathematics percentage
+students,nsc_physical_science_pct,0-100,NSC/matric Physical Sciences percentage
+students,nsc_english_pct,0-100,NSC/matric English percentage
+students,matric_aggregate_pct,0-100,Overall matric aggregate
+students,aps_score,15-42,Admission Point Score
+students,nsfas_eligible_initial,0/1,NSFAS eligibility at enrolment
+student_years,student_id,string,Foreign key to students
+student_years,academic_year,int,Simulated calendar year of this record
+student_years,year_of_study,int,"1 = first year, increments each attempt (repeats included)"
+student_years,gpa_year,0-100,Year GPA (percentage scale)
+student_years,credits_attempted,int,Credits attempted this year
+student_years,credits_earned,int,Credits passed this year
+student_years,credit_pace_ratio,0-1,Cumulative credits earned / credits attempted to date
+student_years,nsfas_funded_this_year,0/1,"Funding status this year (v1.7: refreshed per year, not static)"
+student_years,funding_disruption_flag,0/1,Funding disbursement disruption event this year
+student_years,residence_status,on_campus/off_campus/home,Residence status this year
+student_years,academic_standing,good/probation/exclusion,Institutional standing
+student_years,year_outcome,categorical,progressed / repeated / dropped_out / graduated
+student_years,year_failure_label,0/1,TARGET LABEL — failed to meet promotion rules this year
+student_years,dropout_label,0/1,TARGET LABEL — did not re-register the following year
+student_years,delayed_graduation_label,0/1,TARGET LABEL — graduated later than minimum programme duration
+module_enrollments,enrollment_id,string,Unique enrolment record id
+module_enrollments,student_id,string,Foreign key to students
+module_enrollments,academic_year,int,Year this module was taken
+module_enrollments,year_of_study,int,Student's year of study at the time
+module_enrollments,module_code,string,Synthetic module code
+module_enrollments,module_session_type,semester1/semester2/year,Term session type (v1.3 — semester vs. year module)
+module_enrollments,early_wave_attendance_pct,0-100,Attendance at ~15-30% of session elapsed
+module_enrollments,early_wave_lms_logins,int,Cumulative LMS logins at early wave
+module_enrollments,early_wave_submission_rate,0-1,Assignment submission rate at early wave
+module_enrollments,mid_wave_attendance_pct,0-100,Attendance at ~40-55% of session elapsed
+module_enrollments,mid_wave_lms_logins,int,Cumulative LMS logins at mid wave
+module_enrollments,mid_wave_submission_rate,0-1,Assignment submission rate at mid wave
+module_enrollments,mid_wave_formative_avg,0-100,Average formative assessment mark at mid wave
+module_enrollments,engagement_consistency_score,0-1,1 minus week-over-week engagement variability (v1.4 — consistency predictor)
+module_enrollments,prerequisite_grade,0-100 or blank,"Grade in prerequisite module, where applicable (v1.4 feature)"
+module_enrollments,final_mark,0-100,Final module mark
+module_enrollments,module_outcome,Pass/Fail/Withdrawn,Final module outcome
+module_enrollments,module_failure_label,0/1,TARGET LABEL — module failure (v1.3 module-level scoring)
+weekly_engagement_sample,student_id,string,"Foreign key to students (year-1 subset only, ~120 students, 2023 cohort)"
+weekly_engagement_sample,academic_year,int,Year
+weekly_engagement_sample,module_code,string,Module code
+weekly_engagement_sample,module_session_type,semester1/semester2/year,Session type — determines total weeks (13 or 26)
+weekly_engagement_sample,week_num,int,Week number within the session
+weekly_engagement_sample,session_fraction_elapsed,0-1,Term-session-aware elapsed fraction (v1.3 scoring wave logic)
+weekly_engagement_sample,lms_logins,int,LMS logins that week
+weekly_engagement_sample,attendance_flag,0/1,Attended that week
+weekly_engagement_sample,cumulative_submission_rate,0-1,Cumulative submission rate to that week
+qualifications,programme,string,Programme/qualification title
+qualifications,faculty,string,Faculty
+qualifications,saqa_id,int or blank,SAQA NLRD qualification ID (blank where not yet looked up)
+qualifications,nqf_level,int,NQF level
+qualifications,min_credits,int,Minimum credits per SAQA registration or HEQSF-standard convention
+qualifications,min_years_to_complete,int,ceil(min_credits / 120)
+qualifications,qualification_type,string,SAQA/CHE qualification type descriptor
+qualifications,source,SAQA-verified/HEQSF-standard,Provenance of the min_credits figure

@@ -1,0 +1,131 @@
+@* Student profile drawer (advisor view). Shows the aggregate year-failure and
+   delayed-graduation scores, but critically also the per-module breakdown —
+   an advisor caseload spans every module a student is taking, so an aggregate
+   risk number alone doesn't tell the advisor *where* the problem is. *@
+
+<div class="backdrop @(Student is not null ? "open" : "")" @onclick="OnClose"></div>
+<aside class="drawer @(Student is not null ? "open" : "")" aria-hidden="@(Student is null)">
+    @if (Student is not null)
+    {
+        var s = Student;
+        var success = Math.Round(100 - s.Risk);
+
+        <div class="drawer-head">
+            <h2>@s.Id</h2>
+            <button class="drawer-close" aria-label="Close profile" @onclick="OnClose">✕</button>
+        </div>
+        <div class="drawer-body">
+            <div class="drawer-sub">@s.Programme</div>
+
+            <div class="context-chips" style="margin-bottom:16px;">
+                <span class="chip @(s.OverMinimumDuration ? "overdue" : "")">Year @s.YearOfStudy of @s.MinYearsToComplete</span>
+                <span class="chip">Quintile @s.Quintile</span>
+                <span class="chip">NSFAS @(s.Nsfas ? "eligible" : "not eligible")</span>
+                @if (s.FundingDisruption)
+                {
+                    <span class="chip overdue">Funding disruption this year</span>
+                }
+            </div>
+
+            <div class="drawer-tier">
+                <span class="tier-chip" style="--tier-color:var(--risk-@s.Tier); --tier-bg:var(--risk-@(s.Tier)-bg);">@TierLabel(s.Tier)</span>
+                <span class="meta">Year-failure risk</span>
+            </div>
+
+            <div class="split-bar" style="--tier-color:var(--risk-@s.Tier);">
+                <div class="split-risk" style="flex:@s.Risk">@s.Risk.ToString("0")%</div>
+                <div class="split-success" style="flex:@success">@success%</div>
+            </div>
+            <div class="split-legend"><span>Risk of not passing this year</span><span>Estimated chance of success</span></div>
+
+            <div class="drawer-section-title">Top contributing factors</div>
+            <ul class="drawer-factors">
+                @foreach (var f in s.Factors)
+                {
+                    <li>
+                        @if (f.Direction == "increases")
+                        {
+                            <span class="arrow-up">▲</span>
+                        }
+                        else
+                        {
+                            <span class="arrow-down">▼</span>
+                        }
+                        <span class="flabel">@f.Label</span>
+                    </li>
+                }
+            </ul>
+
+            <div class="drawer-section-title">Delayed-graduation risk</div>
+            <div class="secondary-panel">
+                <div class="secondary-panel-head">
+                    <span class="label">Probability of graduating past minimum duration</span>
+                    <span class="num" style="color:var(--risk-@s.DelayedGradTier);">@s.DelayedGradRisk.ToString("0")%</span>
+                </div>
+                <ul class="drawer-factors">
+                    @foreach (var f in s.DelayedGradFactors)
+                    {
+                        <li>
+                            @if (f.Direction == "increases")
+                            {
+                                <span class="arrow-up">▲</span>
+                            }
+                            else
+                            {
+                                <span class="arrow-down">▼</span>
+                            }
+                            <span class="flabel">@f.Label</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="drawer-section-title">Modules this year — where the risk is coming from</div>
+            <div class="module-list">
+                @foreach (var m in s.Modules)
+                {
+                    <div class="module-row" style="--tier-color:var(--risk-@m.Tier);">
+                        <div class="mod-top">
+                            <div class="mod-left">
+                                <span class="mod-code">@m.Module</span>
+                                <span class="mod-risk">@m.Risk.ToString("0")<span style="font-size:10px;color:var(--slate-soft);">/100</span></span>
+                            </div>
+                            <span class="tier-chip" style="--tier-color:var(--risk-@m.Tier); --tier-bg:var(--risk-@(m.Tier)-bg);">@TierLabel(m.Tier)</span>
+                        </div>
+                        <div class="mod-stats">
+                            <span>Attendance @m.Attendance.ToString("0")%</span>
+                            <span>Submissions @m.Submission.ToString("0")%</span>
+                            <span>Formative @m.Formative.ToString("0")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="drawer-actions">
+                <button class="btn btn-primary" disabled="@IsLogged" @onclick="OnLogIntervention">
+                    @(IsLogged ? "✓ Logged intervention" : "Log intervention")
+                </button>
+                <button class="btn btn-ghost" @onclick="OnToggleFlag">
+                    @(IsFlagged ? "✓ Flagged for follow-up — remove flag" : "Flag for manual follow-up")
+                </button>
+            </div>
+        </div>
+    }
+</aside>
+
+@code {
+    [Parameter] public AdvisorStudent? Student { get; set; }
+    [Parameter] public bool IsFlagged { get; set; }
+    [Parameter] public bool IsLogged { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback OnToggleFlag { get; set; }
+    [Parameter] public EventCallback OnLogIntervention { get; set; }
+
+    private static string TierLabel(string tier) => tier switch
+    {
+        "critical" => "Critical",
+        "high" => "High risk",
+        "medium" => "Medium risk",
+        _ => "Low risk",
+    };
+}

@@ -1,0 +1,88 @@
+@page "/"
+@page "/advisor"
+@inject DashboardDataService DataService
+
+<PageTitle>Advisor · Caseload</PageTitle>
+
+@if (_students is null)
+{
+    <p class="loading-state">Loading caseload…</p>
+}
+else
+{
+    var filtered = _selectedYear is null ? _students : _students.Where(s => s.YearOfStudy == _selectedYear).ToList();
+    var sorted = filtered.OrderByDescending(s => s.Risk).ToList();
+    var years = _students.Select(s => s.YearOfStudy).Distinct().OrderBy(y => y).ToList();
+
+    <div class="roster-head">
+        <div>
+            <h1>Advisor caseload</h1>
+            <div class="roster-sub">@sorted.Count students · sorted by risk</div>
+        </div>
+        <div class="sort-control">
+            <select @onchange="OnYearChanged">
+                <option value="">All years of study</option>
+                @foreach (var y in years)
+                {
+                    <option value="@y" selected="@(_selectedYear == y)">Year @y</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="roster-annot">
+        Cross-module caseload for this advisor's students, ranked by year-failure risk, spanning every year
+        of study rather than just first-years — context features (quintile, funding status) persist across
+        the full study lifecycle instead of fading after entry (v1.7). Each card also carries a separate
+        delayed-graduation risk (Model C), trained only on graduated students' pre-entry profile and pace —
+        never on year-of-study itself, since that would just re-derive the label's own definition.
+    </div>
+
+    <div class="grid">
+        @foreach (var s in sorted)
+        {
+            <RiskCard Id="@s.Id" Subtitle="@s.Programme" Risk="@s.Risk" Tier="@s.Tier" Factors="@s.Factors"
+                      PaceBadge="@($"Year {s.YearOfStudy} of {s.MinYearsToComplete}")" PaceOverdue="@s.OverMinimumDuration"
+                      SecondaryLabel="Delayed-graduation risk" SecondaryRisk="@s.DelayedGradRisk" SecondaryTier="@s.DelayedGradTier"
+                      IsFlagged="@_flagged.Contains(s.Id)" IsLogged="@_logged.Contains(s.Id)"
+                      OnToggleFlag="@(() => ToggleFlag(s.Id))" OnLogIntervention="@(() => LogIntervention(s.Id))"
+                      OnCardClick="@(() => OpenDrawer(s.Id))" />
+        }
+    </div>
+
+    <StudentDrawer Student="@_openStudent"
+                   IsFlagged="@(_openStudent is not null && _flagged.Contains(_openStudent.Id))"
+                   IsLogged="@(_openStudent is not null && _logged.Contains(_openStudent.Id))"
+                   OnClose="CloseDrawer"
+                   OnToggleFlag="@(() => { if (_openStudent is not null) ToggleFlag(_openStudent.Id); })"
+                   OnLogIntervention="@(() => { if (_openStudent is not null) LogIntervention(_openStudent.Id); })" />
+}
+
+@code {
+    private List<AdvisorStudent>? _students;
+    private int? _selectedYear;
+    private AdvisorStudent? _openStudent;
+    private readonly HashSet<string> _flagged = [];
+    private readonly HashSet<string> _logged = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var data = await DataService.GetDashboardDataAsync();
+        _students = data.Advisor.Students;
+    }
+
+    private void OpenDrawer(string id) => _openStudent = _students!.First(s => s.Id == id);
+    private void CloseDrawer() => _openStudent = null;
+
+    private void OnYearChanged(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+        _selectedYear = string.IsNullOrEmpty(value) ? null : int.Parse(value);
+    }
+
+    private void ToggleFlag(string id)
+    {
+        if (!_flagged.Add(id)) _flagged.Remove(id);
+    }
+
+    private void LogIntervention(string id) => _logged.Add(id);
+}

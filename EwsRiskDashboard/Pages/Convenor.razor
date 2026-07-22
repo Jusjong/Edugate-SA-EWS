@@ -1,0 +1,63 @@
+@page "/convenor"
+@inject DashboardDataService DataService
+
+<PageTitle>Convenor · Module</PageTitle>
+
+@if (_students is null)
+{
+    <p class="loading-state">Loading module roster…</p>
+}
+else
+{
+    var sorted = _students.OrderByDescending(s => s.Risk).ToList();
+
+    <div class="roster-head">
+        <div>
+            <h1>Module roster — @_module</h1>
+            <div class="roster-sub">@sorted.Count students · sorted by risk</div>
+        </div>
+    </div>
+    <div class="roster-annot">
+        A student flagged in this module escalates to their advisor as a year-risk signal once they're
+        concurrently flagged in more than one module (Sec. 4.5, roll-up rule) — not routed through the faculty tree.
+    </div>
+
+    <div class="grid">
+        @foreach (var s in sorted)
+        {
+            <RiskCard Id="@s.Id" Subtitle="@($"Module {_module}")" Risk="@s.Risk" Tier="@s.Tier" Factors="@s.Factors"
+                      IsFlagged="@_flagged.Contains(s.Id)" IsLogged="@_logged.Contains(s.Id)"
+                      OnToggleFlag="@(() => ToggleFlag(s.Id))" OnLogIntervention="@(() => LogIntervention(s.Id))">
+                @if (s.Tier is "critical" or "high")
+                {
+                    <button class="btn btn-ghost" disabled="@_escalated.Contains(s.Id)" @onclick="@(() => Escalate(s.Id))">
+                        @(_escalated.Contains(s.Id) ? "✓ Escalated" : "Escalate to advisor")
+                    </button>
+                }
+            </RiskCard>
+        }
+    </div>
+}
+
+@code {
+    private string _module = "";
+    private List<ConvenorStudent>? _students;
+    private readonly HashSet<string> _flagged = [];
+    private readonly HashSet<string> _logged = [];
+    private readonly HashSet<string> _escalated = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var data = await DataService.GetDashboardDataAsync();
+        _module = data.Convenor.Module;
+        _students = data.Convenor.Students;
+    }
+
+    private void ToggleFlag(string id)
+    {
+        if (!_flagged.Add(id)) _flagged.Remove(id);
+    }
+
+    private void LogIntervention(string id) => _logged.Add(id);
+    private void Escalate(string id) => _escalated.Add(id);
+}

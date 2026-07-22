@@ -1,0 +1,286 @@
+/* ---------------------------------------------------------------------
+   Design tokens — ported from the approved HTML prototype
+   (registrar teal accent, cool charcoal/paper neutrals, semantic risk ramp
+   kept separate from the brand accent so it's never mistaken for it).
+--------------------------------------------------------------------- */
+:root {
+    --ink: #12181C;
+    --paper: #F1F4F3;
+    --accent: #1B6E71;
+    --accent-strong: #145356;
+    --accent-ink: #FFFFFF;
+    --slate: #5C6770;
+    --slate-soft: #838D95;
+    --line: rgba(18, 24, 28, 0.13);
+    --surface: #FFFFFF;
+    --surface-2: #E6ECEB;
+    --surface-3: #DCE4E3;
+    --shadow: rgba(18, 24, 28, 0.10);
+
+    --risk-critical: #B23A32;
+    --risk-high: #C2691F;
+    --risk-medium: #A9861F;
+    --risk-low: #3C7A54;
+    --risk-critical-bg: rgba(178, 58, 50, 0.11);
+    --risk-high-bg: rgba(194, 105, 31, 0.11);
+    --risk-medium-bg: rgba(169, 134, 31, 0.13);
+    --risk-low-bg: rgba(60, 122, 84, 0.11);
+
+    --font-display: Iowan Old Style, "Palatino Linotype", "URW Palladio L", P052, Georgia, serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink: #E9EDEC;
+        --paper: #10161A;
+        --accent: #49ABAD;
+        --accent-strong: #6CC0C1;
+        --accent-ink: #06201F;
+        --slate: #9AA5AC;
+        --slate-soft: #6C767D;
+        --line: rgba(233, 237, 236, 0.14);
+        --surface: #171F23;
+        --surface-2: #1C2529;
+        --surface-3: #242E32;
+        --shadow: rgba(0, 0, 0, 0.45);
+
+        --risk-critical: #E2695F;
+        --risk-high: #E2954F;
+        --risk-medium: #D2AC4C;
+        --risk-low: #63AC7E;
+        --risk-critical-bg: rgba(226, 105, 95, 0.16);
+        --risk-high-bg: rgba(226, 149, 79, 0.16);
+        --risk-medium-bg: rgba(210, 172, 76, 0.17);
+        --risk-low-bg: rgba(99, 172, 126, 0.16);
+    }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+a { color: var(--accent); }
+code { color: var(--accent-strong); }
+
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+}
+
+/* ---------------------------------------------------------------------
+   App shell (topbar + main) — see Layout/MainLayout.razor
+--------------------------------------------------------------------- */
+.app-shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+.topbar {
+    display: flex; align-items: center; gap: 20px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    flex-wrap: wrap;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand-mark {
+    font-family: var(--font-display); font-weight: 700; font-size: 1.35rem;
+    color: var(--accent); letter-spacing: 0.01em;
+    border-bottom: 2px solid var(--accent); padding-bottom: 1px;
+}
+.brand-name { font-family: var(--font-display); font-size: 1.05rem; }
+.brand-name em { font-style: normal; color: var(--slate); }
+
+.mode-nav { display: flex; background: var(--surface-2); border-radius: 8px; padding: 3px; gap: 2px; }
+.mode-nav a {
+    display: inline-block; text-decoration: none; color: var(--slate);
+    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    transition: background .15s, color .15s;
+}
+.mode-nav a.active { background: var(--accent); color: var(--accent-ink); }
+.mode-nav a:not(.active):hover { background: var(--surface-3); color: var(--ink); }
+
+.proto-badge {
+    font-size: 11.5px; font-weight: 600; letter-spacing: 0.03em;
+    color: var(--slate); border: 1px solid var(--line); border-radius: 20px;
+    padding: 5px 12px; white-space: nowrap;
+}
+
+.app-main { flex: 1; padding: 20px 26px 60px; min-width: 0; }
+
+/* ---------------------------------------------------------------------
+   Roster grid + risk cards — shared by Pages/Advisor.razor and Convenor.razor
+--------------------------------------------------------------------- */
+.roster-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 6px; flex-wrap: wrap; }
+.roster-head h1 { font-size: 1.4rem; }
+.roster-sub { color: var(--slate); font-size: 13px; margin-top: 4px; }
+.roster-annot {
+    font-size: 12.5px; color: var(--slate); background: var(--surface-2);
+    border-radius: 8px; padding: 9px 13px; margin: 14px 0 18px; max-width: 640px; line-height: 1.5;
+}
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 14px; }
+
+.card {
+    position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 14px 12px 17px; box-shadow: 0 1px 2px var(--shadow);
+    transition: box-shadow .15s, transform .15s; overflow: hidden;
+}
+.card:hover { box-shadow: 0 6px 18px var(--shadow); transform: translateY(-1px); }
+.card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--tier-color); }
+
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.card-id { font-family: var(--font-mono); font-size: 13px; font-weight: 600; }
+.card-sub { color: var(--slate); font-size: 11.5px; margin-top: 1px; }
+
+.pace-badge {
+    display: inline-block; margin-top: 5px; font-size: 10.5px; font-weight: 600;
+    padding: 2px 7px; border-radius: 4px; background: var(--surface-2); color: var(--slate);
+}
+.pace-badge.overdue { background: var(--risk-medium-bg); color: var(--risk-medium); }
+
+.secondary-risk {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: -2px 0 12px; padding: 7px 10px; border-radius: 7px; background: var(--surface-2);
+    border-left: 3px solid var(--tier-color);
+}
+.secondary-label { font-size: 11.5px; color: var(--slate); }
+.secondary-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 13px; color: var(--tier-color); }
+
+.tier-chip {
+    text-transform: uppercase; font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 4px; white-space: nowrap;
+    background: var(--tier-bg); color: var(--tier-color);
+}
+
+.flag-btn {
+    position: absolute; top: 10px; right: 10px; border: none; background: transparent;
+    font-size: 15px; cursor: pointer; color: var(--slate-soft); line-height: 1; padding: 3px;
+}
+.flag-btn.flagged { color: var(--risk-high); }
+.flag-btn:hover { color: var(--risk-high); }
+
+.risk-row { display: flex; align-items: baseline; gap: 6px; margin: 10px 0 2px; }
+.risk-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 2rem; color: var(--tier-color); line-height: 1; }
+.risk-max { font-family: var(--font-mono); color: var(--slate-soft); font-size: 12px; }
+.risk-label { color: var(--slate); font-size: 11.5px; margin-left: auto; }
+
+.factors { margin: 10px 0 12px; padding: 0; list-style: none; }
+.factors li { display: flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 0; color: var(--ink); }
+.arrow-up { color: var(--risk-critical); font-weight: 700; }
+.arrow-down { color: var(--risk-low); font-weight: 700; }
+.factors .flabel { flex: 1; }
+.factors .fval { color: var(--slate-soft); font-family: var(--font-mono); font-size: 11px; }
+
+.card-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.btn { font-size: 12px; font-weight: 600; border-radius: 6px; padding: 7px 11px; cursor: pointer; border: 1px solid transparent; transition: opacity .1s, background .12s; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { background: var(--accent-strong); }
+.btn-primary[disabled] { background: var(--surface-3); color: var(--slate); cursor: default; }
+.btn-ghost { background: transparent; border-color: var(--line); color: var(--slate); }
+.btn-ghost:hover { border-color: var(--slate-soft); color: var(--ink); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.empty-state, .loading-state { color: var(--slate); font-size: 13px; padding: 30px 6px; }
+
+/* ---------------------------------------------------------------------
+   Student profile drawer — Components/StudentDrawer.razor
+--------------------------------------------------------------------- */
+.backdrop {
+    position: fixed; inset: 0; background: rgba(10, 14, 16, 0.4); opacity: 0; pointer-events: none;
+    transition: opacity .18s; z-index: 20;
+}
+.backdrop.open { opacity: 1; pointer-events: auto; }
+
+.drawer {
+    position: fixed; top: 0; right: 0; height: 100vh; width: min(460px, 94vw);
+    background: var(--surface); border-left: 1px solid var(--line);
+    transform: translateX(100%); transition: transform .22s ease; z-index: 21;
+    display: flex; flex-direction: column; box-shadow: -8px 0 30px var(--shadow);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+.drawer-head h2 { font-family: var(--font-mono); font-size: 1.15rem; }
+.drawer-close { border: none; background: var(--surface-2); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 15px; color: var(--slate); line-height: 1; }
+.drawer-close:hover { background: var(--surface-3); color: var(--ink); }
+.drawer-body { padding: 18px; overflow-y: auto; flex: 1; }
+
+.drawer-sub { color: var(--slate); font-size: 12.5px; margin-bottom: 16px; }
+.drawer-tier { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 16px; }
+.drawer-tier .meta { font-size: 12px; color: var(--slate); }
+
+.split-bar { display: flex; height: 34px; border-radius: 7px; overflow: hidden; margin-bottom: 6px; border: 1px solid var(--line); }
+.split-risk, .split-success { display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 12.5px; color: #fff; font-variant-numeric: tabular-nums; }
+.split-risk { background: var(--tier-color); }
+.split-success { background: var(--risk-low); }
+.split-legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--slate); margin-bottom: 20px; }
+
+.drawer-section-title { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate); font-weight: 700; margin: 20px 0 10px; }
+.drawer-section-title:first-of-type { margin-top: 0; }
+
+.context-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.chip { font-size: 12px; background: var(--surface-2); border-radius: 20px; padding: 5px 11px; color: var(--ink); }
+.chip.overdue { background: var(--risk-medium-bg); color: var(--risk-medium); font-weight: 600; }
+
+.drawer-factors { list-style: none; padding: 0; margin: 0; }
+.drawer-factors li { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.drawer-factors li:last-child { border-bottom: none; }
+
+.secondary-panel { background: var(--surface-2); border-radius: 8px; padding: 12px 14px; margin-top: 4px; }
+.secondary-panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.secondary-panel-head .label { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.secondary-panel-head .num { font-family: var(--font-mono); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.module-list { display: flex; flex-direction: column; gap: 8px; }
+.module-row {
+    display: flex; flex-direction: column; gap: 6px;
+    background: var(--surface-2); border-radius: 8px; padding: 10px 12px; border-left: 3px solid var(--tier-color);
+}
+.module-row .mod-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.module-row .mod-left { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.module-row .mod-code { font-family: var(--font-mono); font-weight: 700; font-size: 13px; white-space: nowrap; }
+.module-row .mod-risk { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; color: var(--tier-color); font-size: 13px; white-space: nowrap; }
+.module-row .mod-stats { display: flex; gap: 12px; font-size: 11.5px; color: var(--slate); flex-wrap: wrap; }
+
+.drawer-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 22px; }
+.drawer-actions .btn { width: 100%; padding: 10px; font-size: 13px; text-align: center; }
+
+/* ---------------------------------------------------------------------
+   Blazor framework hooks (restyled to the token palette, not removed —
+   index.html and the WASM loader depend on these class names)
+--------------------------------------------------------------------- */
+#blazor-error-ui {
+    color-scheme: light only;
+    background: var(--risk-high-bg);
+    border-top: 1px solid var(--risk-high);
+    bottom: 0; box-shadow: 0 -1px 2px var(--shadow); box-sizing: border-box; display: none;
+    left: 0; padding: 0.6rem 1.25rem 0.7rem 1.25rem; position: fixed; width: 100%; z-index: 1000;
+    font-family: var(--font-body); color: var(--ink);
+}
+#blazor-error-ui .dismiss { cursor: pointer; position: absolute; right: 0.75rem; top: 0.5rem; }
+
+.loading-progress {
+    position: absolute; display: block; width: 8rem; height: 8rem; inset: 20vh 0 auto 0; margin: 0 auto 0 auto;
+}
+.loading-progress circle { fill: none; stroke: var(--surface-3); stroke-width: 0.6rem; transform-origin: 50% 50%; transform: rotate(-90deg); }
+.loading-progress circle:last-child {
+    stroke: var(--accent);
+    stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+    transition: stroke-dasharray 0.05s ease-in-out;
+}
+.loading-progress-text { position: absolute; text-align: center; font-weight: bold; inset: calc(20vh + 3.25rem) 0 auto 0.2rem; color: var(--ink); }
+.loading-progress-text:after { content: var(--blazor-load-percentage-text, "Loading"); }
+
+.validation-message { color: var(--risk-critical); }
+
+@media (max-width: 780px) {
+    .app-shell .topbar { gap: 10px; }
+}

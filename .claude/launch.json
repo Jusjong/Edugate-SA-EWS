@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ews-blazor",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "EwsRiskDashboard", "--urls", "http://localhost:5102"],
+      "port": 5102
+    }
+  ]
+}
