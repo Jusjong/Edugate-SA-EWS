@@ -1,0 +1,40 @@
+@* Hover/focus tooltip exposing the literal arithmetic behind a risk score:
+   every feature's coefficient * standardized value, the intercept, and the
+   sigmoid step — not just the top-3 factor summary shown on the card. *@
+
+<span class="calc-trigger" tabindex="0" @onclick:stopPropagation="true">
+    <span class="info-dot" aria-hidden="true">ⓘ</span>
+    <span class="sr-only">How this risk score was calculated</span>
+    <div class="calc-popover">
+        <div class="calc-title">How this was calculated</div>
+        <div class="calc-sub">@ModelLabel — each row is coefficient × standardized value</div>
+        <div class="calc-table">
+            @foreach (var t in Calc.Terms)
+            {
+                <div class="calc-row">
+                    <span class="calc-label">@t.Label</span>
+                    <span class="calc-expr">@Fmt(t.Coefficient) × @Fmt(t.StandardizedValue)</span>
+                    <span class="calc-contrib @(t.Contribution >= 0 ? "pos" : "neg")">@Fmt(t.Contribution)</span>
+                </div>
+            }
+            <div class="calc-row calc-intercept">
+                <span class="calc-label">Base rate (intercept)</span>
+                <span class="calc-expr"></span>
+                <span class="calc-contrib">@Fmt(Calc.Intercept)</span>
+            </div>
+            <div class="calc-row calc-sum">
+                <span class="calc-label">Sum (log-odds)</span>
+                <span class="calc-expr"></span>
+                <span class="calc-contrib">@Fmt(Calc.Logit)</span>
+            </div>
+        </div>
+        <div class="calc-formula">sigmoid(log-odds) = <b>@((Calc.Probability * 100).ToString("0"))%</b></div>
+    </div>
+</span>
+
+@code {
+    [Parameter, EditorRequired] public CalculationBreakdown Calc { get; set; } = null!;
+    [Parameter] public string ModelLabel { get; set; } = "Logistic regression";
+
+    private static string Fmt(double v) => (v >= 0 ? "+" : "") + v.ToString("0.00");
+}

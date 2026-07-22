@@ -25,7 +25,8 @@ else
     <div class="grid">
         @foreach (var s in sorted)
         {
-            <RiskCard Id="@s.Id" Subtitle="@($"Module {_module}")" Risk="@s.Risk" Tier="@s.Tier" Factors="@s.Factors"
+            <RiskCard @key="s.Id" Id="@s.Id" Subtitle="@($"Module {_module}")" Risk="@s.Risk" Tier="@s.Tier" Factors="@s.Factors"
+                      Calculation="@s.Calculation" CalculationLabel="Module-failure model"
                       IsFlagged="@_flagged.Contains(s.Id)" IsLogged="@_logged.Contains(s.Id)"
                       OnToggleFlag="@(() => ToggleFlag(s.Id))" OnLogIntervention="@(() => LogIntervention(s.Id))">
                 @if (s.Tier is "critical" or "high")

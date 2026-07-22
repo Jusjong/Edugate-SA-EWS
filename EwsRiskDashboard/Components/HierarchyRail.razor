@@ -1,0 +1,98 @@
+@* Faculty > Department > Academic Career > Programme > Student navigator for
+   the advisor view. Convenor stays module-scoped, not hierarchy-scoped —
+   Sec. 4.5 routes module flags to the lecturer, not through the faculty tree. *@
+
+<aside class="rail">
+    <h2>Student hierarchy</h2>
+    <span class="rail-sub">Faculty → Department → Academic career → Programme</span>
+
+    <button class="tree-reset @(SelectedField is null ? "active" : "")" @onclick="Reset">
+        All students (@Students.Count)
+    </button>
+
+    @foreach (var facultyGroup in Students.GroupBy(s => s.Faculty).OrderBy(g => g.Key))
+    {
+        <details class="node" @key="facultyGroup.Key" open="@IsAncestorOf("faculty", facultyGroup.Key)">
+            <summary class="@(IsSelected("faculty", facultyGroup.Key) ? "selected" : "")"
+                     @onclick="@(() => Select("faculty", facultyGroup.Key))" @onclick:stopPropagation="true">
+                @facultyGroup.Key <span class="node-count">@facultyGroup.Count()</span>
+            </summary>
+            <div class="node-children">
+                @foreach (var deptGroup in facultyGroup.GroupBy(s => s.Department).OrderBy(g => g.Key))
+                {
+                    <details class="node" @key="deptGroup.Key" open="@IsAncestorOf("department", deptGroup.Key)">
+                        <summary class="@(IsSelected("department", deptGroup.Key) ? "selected" : "")"
+                                 @onclick="@(() => Select("department", deptGroup.Key))" @onclick:stopPropagation="true">
+                            @deptGroup.Key <span class="node-count">@deptGroup.Count()</span>
+                        </summary>
+                        <div class="node-children">
+                            @foreach (var careerGroup in deptGroup.GroupBy(s => s.AcademicCareer).OrderBy(g => g.Key))
+                            {
+                                <details class="node" @key="careerGroup.Key" open="@IsAncestorOf("career", careerGroup.Key)">
+                                    <summary class="@(IsSelected("career", careerGroup.Key) ? "selected" : "")"
+                                             @onclick="@(() => Select("career", careerGroup.Key))" @onclick:stopPropagation="true">
+                                        @careerGroup.Key <span class="node-count">@careerGroup.Count()</span>
+                                    </summary>
+                                    <div class="node-children">
+                                        @foreach (var progGroup in careerGroup.GroupBy(s => s.Programme).OrderBy(g => g.Key))
+                                        {
+                                            <button class="prog-btn @(IsSelected("programme", progGroup.Key) ? "active" : "")"
+                                                    @key="progGroup.Key"
+                                                    @onclick="@(() => Select("programme", progGroup.Key))">
+                                                @progGroup.Key<span class="count">@progGroup.Count()</span>
+                                            </button>
+                                        }
+                                    </div>
+                                </details>
+                            }
+                        </div>
+                    </details>
+                }
+            </div>
+        </details>
+    }
+
+    <div class="rail-note">
+        <strong>Academic career</strong>
+        Constant "Undergraduate" — this dataset models first-time-entering undergraduates
+        only (see methodology.md). It becomes a real, varying level once a postgraduate
+        cohort is added.
+    </div>
+</aside>
+
+@code {
+    [Parameter, EditorRequired] public List<AdvisorStudent> Students { get; set; } = [];
+    [Parameter] public string? SelectedField { get; set; }
+    [Parameter] public string? SelectedValue { get; set; }
+    [Parameter] public EventCallback<(string Field, string Value)> OnSelect { get; set; }
+    [Parameter] public EventCallback OnReset { get; set; }
+
+    private bool IsSelected(string field, string value) => SelectedField == field && SelectedValue == value;
+
+    // Keep a node expanded if it's on the path to (or is) the current selection,
+    // so picking a programme doesn't collapse its parent faculty/department.
+    private bool IsAncestorOf(string field, string value)
+    {
+        if (SelectedField is null) return false;
+        if (SelectedField == field) return SelectedValue == value;
+        var match = Students.FirstOrDefault(s => SelectedField switch
+        {
+            "faculty" => s.Faculty == SelectedValue,
+            "department" => s.Department == SelectedValue,
+            "career" => s.AcademicCareer == SelectedValue,
+            "programme" => s.Programme == SelectedValue,
+            _ => false,
+        });
+        if (match is null) return false;
+        return field switch
+        {
+            "faculty" => match.Faculty == value,
+            "department" => match.Department == value,
+            "career" => match.AcademicCareer == value,
+            _ => false,
+        };
+    }
+
+    private Task Select(string field, string value) => OnSelect.InvokeAsync((field, value));
+    private Task Reset() => OnReset.InvokeAsync();
+}

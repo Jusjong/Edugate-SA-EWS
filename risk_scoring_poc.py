@@ -32,7 +32,7 @@ Model C — Delayed-graduation risk (advisor view, new):
   Predicts the probability that a currently-enrolled student will
   eventually graduate later than their programme's minimum duration.
   IMPORTANT: generate.py defines delayed_graduation_label as
-  int(graduated and year_of_study > max_years) — i.e. literally computed
+  int(graduated and year_of_study > max_years + 1) — i.e. literally computed
   from year-of-study vs. minimum duration. Using "years enrolled so far"
   (or anything derived from it) as an input feature here would just let
   the model re-derive its own label's definition, not predict anything.
@@ -69,6 +69,30 @@ def tier_of(p):
     if p >= 0.3:
         return "medium"
     return "low"
+
+def full_breakdown(coef, intercept, xs, feat_names, label_map):
+    """The complete, literal arithmetic behind a risk score — every feature's
+    coefficient * standardized_value, the intercept, and the sigmoid step —
+    not just the top-3 summary. Feeds the "how was this calculated" hover
+    tooltip in the UI. logit/probability are computed from full-precision
+    values (matching predict_proba exactly); individual terms are rounded
+    only for display, so their displayed sum may be off by a cent or two."""
+    raw_terms = [
+        (label_map[name], float(coef[i]), float(xs[i]), float(coef[i] * xs[i]))
+        for i, name in enumerate(feat_names)
+    ]
+    raw_terms.sort(key=lambda t: -abs(t[3]))
+    logit = float(intercept) + sum(t[3] for t in raw_terms)
+    probability = 1 / (1 + np.exp(-logit))
+    return {
+        "intercept": round(float(intercept), 3),
+        "logit": round(logit, 3),
+        "probability": round(float(probability), 4),
+        "terms": [
+            {"label": l, "coefficient": round(c, 3), "standardizedValue": round(v, 3), "contribution": round(contrib, 3)}
+            for (l, c, v, contrib) in raw_terms
+        ],
+    }
 
 # ---------------------------------------------------------------------
 # Model A — module-level (convenor view)
@@ -118,6 +142,7 @@ def modules_for(student_id, academic_year):
             "risk": round(float(r.risk_proba) * 100, 0),
             "tier": tier_of(r.risk_proba),
             "factors": contributions_a(i),
+            "calculation": full_breakdown(clf_a.coef_[0], clf_a.intercept_[0], Xas[i], feat_a, label_a),
         })
     return result
 
@@ -135,6 +160,7 @@ for pos in sub.head(14).index:
         "risk": round(float(row.risk_proba) * 100, 0),
         "tier": tier_of(row.risk_proba),
         "factors": contributions_a(i),
+        "calculation": full_breakdown(clf_a.coef_[0], clf_a.intercept_[0], Xas[i], feat_a, label_a),
     })
 
 # ---------------------------------------------------------------------
@@ -147,9 +173,16 @@ pre_entry_feats = ["school_quintile", "first_gen_flag", "home_language_eal_flag"
                     "nbt_quantitative_literacy", "nbt_mathematics", "matric_aggregate_pct", "aps_score",
                     "nsfas_eligible_initial"]
 
-# Each student's most recent row — their "current" state for scoring the live caseload.
-sy_latest = sy.groupby("student_id").tail(1).reset_index(drop=True)
-active_latest = sy_latest[sy_latest.year_outcome.isin(["progressed", "repeated"])].copy()
+# A real point-in-time snapshot, not each student's *final* simulated row.
+# A student's last row is almost always a terminal outcome (graduated/dropped)
+# or, for the rare tail that never resolves, the simulator's hard year-cap
+# (max_years + 2) — which biases "most recent row" toward already-far-behind
+# students and silently excludes 1st/2nd-years entirely. CURRENT_YEAR is the
+# most recent intake cohort's calendar year, i.e. "today" for this dataset;
+# every cohort's row at that year is a genuine cross-sectional snapshot.
+CURRENT_YEAR = int(students.cohort_year.max())
+sy_current = sy[sy.academic_year == CURRENT_YEAR]
+active_latest = sy_current[sy_current.year_outcome.isin(["progressed", "repeated"])].copy()
 
 # ---------------------------------------------------------------------
 # Model B — year-level failure risk (advisor view)
@@ -211,10 +244,15 @@ def contributions_c(xs):
     return [{"label": label_c[feat_c[i]], "direction": "increases" if contribs[i] > 0 else "decreases"} for i in order]
 
 # ---------------------------------------------------------------------
-# Score the live, currently-active caseload on both Model B and Model C
+# Score the live, currently-active caseload on both Model B and Model C.
+# This is every active student (not a small sample) so the Faculty >
+# Department > Academic Career > Programme > Student hierarchy view has
+# real breadth to navigate — a 12-student sample would leave most nodes
+# in the tree empty.
 # ---------------------------------------------------------------------
 active = active_latest.merge(
-    students[["student_id", "programme", "min_years_to_complete"] + pre_entry_feats], on="student_id", how="inner"
+    students[["student_id", "programme", "faculty", "department", "academic_career", "min_years_to_complete"] + pre_entry_feats],
+    on="student_id", how="inner"
 ).reset_index(drop=True)
 
 Xb_active = scaler_b.transform(active[feat_b].values)
@@ -223,22 +261,36 @@ active["year_failure_proba"] = clf_b.predict_proba(Xb_active)[:, 1]
 Xc_active = scaler_c.transform(active[feat_c].values)
 active["delayed_grad_proba"] = clf_c.predict_proba(Xc_active)[:, 1]
 
-high = active.sort_values("year_failure_proba", ascending=False).head(9)
-low = active.sort_values("year_failure_proba", ascending=True).head(3)
-caseload = pd.concat([high, low])
+# Cap per department rather than serving the full ~1,100 active students —
+# same "highest-risk + a few for contrast" sampling the original 12-student
+# caseload used, just applied per department so every node in the Faculty >
+# Department > Academic Career > Programme > Student hierarchy stays
+# populated instead of collapsing to a handful of departments.
+CASELOAD_HIGH_PER_DEPT = 15
+CASELOAD_LOW_PER_DEPT = 5
+sampled = []
+for _, grp in active.groupby(["faculty", "department"]):
+    grp_sorted = grp.sort_values("year_failure_proba", ascending=False)
+    sampled.append(grp_sorted.head(CASELOAD_HIGH_PER_DEPT))
+    sampled.append(grp_sorted.tail(CASELOAD_LOW_PER_DEPT))
+caseload = pd.concat(sampled).drop_duplicates(subset="student_id")
 
 advisor_students = []
 for pos in caseload.index:
     row = caseload.loc[pos]
     advisor_students.append({
-        "id": row.student_id, "programme": row.programme, "quintile": int(row.school_quintile),
+        "id": row.student_id, "programme": row.programme, "faculty": row.faculty,
+        "department": row.department, "academicCareer": row.academic_career,
+        "quintile": int(row.school_quintile),
         "nsfas": bool(row.nsfas_eligible_initial), "fundingDisruption": bool(row.funding_disruption_flag),
         "yearOfStudy": int(row.year_of_study), "minYearsToComplete": int(row.min_years_to_complete),
         "risk": round(float(row.year_failure_proba) * 100, 0), "tier": tier_of(row.year_failure_proba),
         "factors": contributions_b(Xb_active[pos]),
+        "calculation": full_breakdown(clf_b.coef_[0], clf_b.intercept_[0], Xb_active[pos], feat_b, label_b),
         "delayedGradRisk": round(float(row.delayed_grad_proba) * 100, 0),
         "delayedGradTier": tier_of(row.delayed_grad_proba),
         "delayedGradFactors": contributions_c(Xc_active[pos]),
+        "delayedGradCalculation": full_breakdown(clf_c.coef_[0], clf_c.intercept_[0], Xc_active[pos], feat_c, label_c),
         "modules": modules_for(row.student_id, row.academic_year),
     })
 
@@ -250,7 +302,8 @@ with open("dashboard_data.json", "w") as f:
     json.dump(out, f, indent=2)
 
 print(f"Convenor view: {len(convenor_students)} students in module {top_module}")
-print(f"Advisor view: {len(advisor_students)} students in caseload sample "
+print(f"Advisor view: {len(advisor_students)} active students across {caseload.faculty.nunique()} faculties / "
+      f"{caseload.department.nunique()} departments "
       f"(spanning years of study: {sorted(caseload.year_of_study.unique().tolist())})")
 print(f"Model C (delayed graduation) trained on {len(train_c)} graduated students "
       f"({yc.mean():.1%} delayed)")

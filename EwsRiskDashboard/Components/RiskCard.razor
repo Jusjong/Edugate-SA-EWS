@@ -23,6 +23,10 @@
     <div class="risk-row">
         <span class="risk-num">@Risk.ToString("0")</span><span class="risk-max">/100</span>
         <span class="risk-label">risk score</span>
+        @if (Calculation is not null)
+        {
+            <CalcTooltip Calc="@Calculation" ModelLabel="@CalculationLabel" />
+        }
     </div>
 
     <ul class="factors">
@@ -49,7 +53,13 @@
     @if (SecondaryTier is not null)
     {
         <div class="secondary-risk" style="--tier-color:var(--risk-@SecondaryTier);">
-            <span class="secondary-label">@SecondaryLabel</span>
+            <span class="secondary-label">
+                @SecondaryLabel
+                @if (SecondaryCalculation is not null)
+                {
+                    <CalcTooltip Calc="@SecondaryCalculation" ModelLabel="@SecondaryCalculationLabel" />
+                }
+            </span>
             <span class="secondary-num">@SecondaryRisk?.ToString("0")<span class="risk-max">/100</span></span>
         </div>
     }
@@ -68,6 +78,8 @@
     [Parameter, EditorRequired] public double Risk { get; set; }
     [Parameter, EditorRequired] public string Tier { get; set; } = "low";
     [Parameter, EditorRequired] public List<RiskFactor> Factors { get; set; } = [];
+    [Parameter] public CalculationBreakdown? Calculation { get; set; }
+    [Parameter] public string CalculationLabel { get; set; } = "Logistic regression";
     [Parameter] public bool IsFlagged { get; set; }
     [Parameter] public bool IsLogged { get; set; }
     [Parameter] public EventCallback OnToggleFlag { get; set; }
@@ -85,6 +97,8 @@
     [Parameter] public string? SecondaryLabel { get; set; }
     [Parameter] public double? SecondaryRisk { get; set; }
     [Parameter] public string? SecondaryTier { get; set; }
+    [Parameter] public CalculationBreakdown? SecondaryCalculation { get; set; }
+    [Parameter] public string SecondaryCalculationLabel { get; set; } = "Logistic regression";
 
     private string TierLabel => Tier switch
     {

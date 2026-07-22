@@ -1,13 +1,13 @@
-programme,faculty,saqa_id,nqf_level,min_credits,min_years_to_complete,qualification_type,source
-Bachelor of Commerce,Commerce,8543,7,536,5,National First Degree,SAQA-verified
-Higher Certificate in Management Development,Commerce,96676,5,120,1,Higher Certificate,SAQA-verified
-Bachelor of Laws,Law,110204,8,480,4,National First Degree,SAQA-verified
-BSc Computer Science,Science,,7,360,3,National First Degree,HEQSF-standard
-BSc Physics,Science,,7,360,3,National First Degree,HEQSF-standard
-BA Social Sciences,Humanities,,7,360,3,National First Degree,HEQSF-standard
-BA Languages,Humanities,,7,360,3,National First Degree,HEQSF-standard
-BEng Civil,Engineering,,8,480,4,Professional Bachelor's Degree,HEQSF-standard
-BEng Electrical,Engineering,,8,480,4,Professional Bachelor's Degree,HEQSF-standard
-BSc Physiotherapy,Health Sciences,,8,480,4,Professional Bachelor's Degree,HEQSF-standard
-BSc Nursing,Health Sciences,,8,480,4,Professional Bachelor's Degree,HEQSF-standard
-BEd Foundation Phase,Education,,7,480,4,Professional Bachelor's Degree,HEQSF-standard
+programme,faculty,department,academic_career,saqa_id,nqf_level,min_credits,min_years_to_complete,qualification_type,source
+Bachelor of Commerce,Commerce,Department of Business Management,Undergraduate,8543,7,536,5,National First Degree,SAQA-verified
+Higher Certificate in Management Development,Commerce,School of Management,Undergraduate,96676,5,120,1,Higher Certificate,SAQA-verified
+Bachelor of Laws,Law,Department of Private Law,Undergraduate,110204,8,480,4,National First Degree,SAQA-verified
+BSc Computer Science,Science,Department of Computer Science and Informatics,Undergraduate,,7,360,3,National First Degree,HEQSF-standard
+BSc Physics,Science,Department of Physics,Undergraduate,,7,360,3,National First Degree,HEQSF-standard
+BA Social Sciences,Humanities,Department of Sociology,Undergraduate,,7,360,3,National First Degree,HEQSF-standard
+BA Languages,Humanities,Department of Language Studies,Undergraduate,,7,360,3,National First Degree,HEQSF-standard
+BEng Civil,Engineering,Department of Civil Engineering,Undergraduate,,8,480,4,Professional Bachelor's Degree,HEQSF-standard
+BEng Electrical,Engineering,"Department of Electrical, Electronic and Computer Engineering",Undergraduate,,8,480,4,Professional Bachelor's Degree,HEQSF-standard
+BSc Physiotherapy,Health Sciences,School of Health and Rehabilitation Sciences,Undergraduate,,8,480,4,Professional Bachelor's Degree,HEQSF-standard
+BSc Nursing,Health Sciences,School of Nursing,Undergraduate,,8,480,4,Professional Bachelor's Degree,HEQSF-standard
+BEd Foundation Phase,Education,Department of Curriculum Studies,Undergraduate,,7,480,4,Professional Bachelor's Degree,HEQSF-standard

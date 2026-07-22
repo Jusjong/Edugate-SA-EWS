@@ -30,6 +30,7 @@
             <div class="drawer-tier">
                 <span class="tier-chip" style="--tier-color:var(--risk-@s.Tier); --tier-bg:var(--risk-@(s.Tier)-bg);">@TierLabel(s.Tier)</span>
                 <span class="meta">Year-failure risk</span>
+                <CalcTooltip Calc="@s.Calculation" ModelLabel="Year-failure model" />
             </div>
 
             <div class="split-bar" style="--tier-color:var(--risk-@s.Tier);">
@@ -59,7 +60,9 @@
             <div class="drawer-section-title">Delayed-graduation risk</div>
             <div class="secondary-panel">
                 <div class="secondary-panel-head">
-                    <span class="label">Probability of graduating past minimum duration</span>
+                    <span class="label">Probability of graduating past minimum duration
+                        <CalcTooltip Calc="@s.DelayedGradCalculation" ModelLabel="Delayed-graduation model" />
+                    </span>
                     <span class="num" style="color:var(--risk-@s.DelayedGradTier);">@s.DelayedGradRisk.ToString("0")%</span>
                 </div>
                 <ul class="drawer-factors">
@@ -89,6 +92,7 @@
                             <div class="mod-left">
                                 <span class="mod-code">@m.Module</span>
                                 <span class="mod-risk">@m.Risk.ToString("0")<span style="font-size:10px;color:var(--slate-soft);">/100</span></span>
+                                <CalcTooltip Calc="@m.Calculation" ModelLabel="Module-failure model" />
                             </div>
                             <span class="tier-chip" style="--tier-color:var(--risk-@m.Tier); --tier-bg:var(--risk-@(m.Tier)-bg);">@TierLabel(m.Tier)</span>
                         </div>

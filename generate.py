@@ -76,56 +76,63 @@ COHORT_YEARS = [2021, 2022, 2023]
 # ---------------------------------------------------------------------
 QUALIFICATIONS = {
     "Bachelor of Commerce": dict(
-        faculty="Commerce", saqa_id=8543, nqf_level=7, min_credits=536,
+        faculty="Commerce", department="Department of Business Management", saqa_id=8543, nqf_level=7, min_credits=536,
         qualification_type="National First Degree", source="SAQA-verified",
     ),
     "Higher Certificate in Management Development": dict(
-        faculty="Commerce", saqa_id=96676, nqf_level=5, min_credits=120,
+        faculty="Commerce", department="School of Management", saqa_id=96676, nqf_level=5, min_credits=120,
         qualification_type="Higher Certificate", source="SAQA-verified",
     ),
     "Bachelor of Laws": dict(
-        faculty="Law", saqa_id=110204, nqf_level=8, min_credits=480,
+        faculty="Law", department="Department of Private Law", saqa_id=110204, nqf_level=8, min_credits=480,
         qualification_type="National First Degree", source="SAQA-verified",
     ),
     "BSc Computer Science": dict(
-        faculty="Science", saqa_id=None, nqf_level=7, min_credits=360,
+        faculty="Science", department="Department of Computer Science and Informatics", saqa_id=None, nqf_level=7, min_credits=360,
         qualification_type="National First Degree", source="HEQSF-standard",
     ),
     "BSc Physics": dict(
-        faculty="Science", saqa_id=None, nqf_level=7, min_credits=360,
+        faculty="Science", department="Department of Physics", saqa_id=None, nqf_level=7, min_credits=360,
         qualification_type="National First Degree", source="HEQSF-standard",
     ),
     "BA Social Sciences": dict(
-        faculty="Humanities", saqa_id=None, nqf_level=7, min_credits=360,
+        faculty="Humanities", department="Department of Sociology", saqa_id=None, nqf_level=7, min_credits=360,
         qualification_type="National First Degree", source="HEQSF-standard",
     ),
     "BA Languages": dict(
-        faculty="Humanities", saqa_id=None, nqf_level=7, min_credits=360,
+        faculty="Humanities", department="Department of Language Studies", saqa_id=None, nqf_level=7, min_credits=360,
         qualification_type="National First Degree", source="HEQSF-standard",
     ),
     "BEng Civil": dict(
-        faculty="Engineering", saqa_id=None, nqf_level=8, min_credits=480,
+        faculty="Engineering", department="Department of Civil Engineering", saqa_id=None, nqf_level=8, min_credits=480,
         qualification_type="Professional Bachelor's Degree", source="HEQSF-standard",
     ),
     "BEng Electrical": dict(
-        faculty="Engineering", saqa_id=None, nqf_level=8, min_credits=480,
+        faculty="Engineering", department="Department of Electrical, Electronic and Computer Engineering", saqa_id=None, nqf_level=8, min_credits=480,
         qualification_type="Professional Bachelor's Degree", source="HEQSF-standard",
     ),
     "BSc Physiotherapy": dict(
-        faculty="Health Sciences", saqa_id=None, nqf_level=8, min_credits=480,
+        faculty="Health Sciences", department="School of Health and Rehabilitation Sciences", saqa_id=None, nqf_level=8, min_credits=480,
         qualification_type="Professional Bachelor's Degree", source="HEQSF-standard",
     ),
     "BSc Nursing": dict(
-        faculty="Health Sciences", saqa_id=None, nqf_level=8, min_credits=480,
+        faculty="Health Sciences", department="School of Nursing", saqa_id=None, nqf_level=8, min_credits=480,
         qualification_type="Professional Bachelor's Degree", source="HEQSF-standard",
     ),
     "BEd Foundation Phase": dict(
-        faculty="Education", saqa_id=None, nqf_level=7, min_credits=480,
+        faculty="Education", department="Department of Curriculum Studies", saqa_id=None, nqf_level=7, min_credits=480,
         qualification_type="Professional Bachelor's Degree", source="HEQSF-standard",
     ),
 }
 for _q in QUALIFICATIONS.values():
     _q["min_years"] = math.ceil(_q["min_credits"] / 120)
+
+# Academic career: PeopleSoft/Campus-Solutions-style grouping above programme
+# (Undergraduate / Postgraduate / Continuing Education). Constant here — see
+# methodology.md — because this generator models first-time-entering
+# undergraduates only (Section on "What this is"); it becomes a real,
+# varying field once a postgraduate cohort is added.
+ACADEMIC_CAREER = "Undergraduate"
 
 PROGRAMME_NAMES = list(QUALIFICATIONS.keys())
 PROGRAMME_WEIGHTS = [
@@ -187,7 +194,8 @@ for i in range(N_STUDENTS):
     nsfas_eligible = int(rng.random() < (0.85 if quintile <= 2 else 0.60 if quintile == 3 else 0.25 if quintile == 4 else 0.08))
 
     students.append(dict(
-        student_id=student_id, cohort_year=cohort_year, faculty=faculty, programme=programme,
+        student_id=student_id, cohort_year=cohort_year, faculty=faculty,
+        department=qual["department"], academic_career=ACADEMIC_CAREER, programme=programme,
         saqa_id=(qual["saqa_id"] if qual["saqa_id"] else ""), nqf_level=qual["nqf_level"],
         min_credits=qual["min_credits"], min_years_to_complete=qual["min_years"],
         qualification_source=qual["source"],
@@ -364,7 +372,11 @@ for idx, srow in students_df.iterrows():
             nsfas_funded_this_year=int(nsfas_funded), funding_disruption_flag=int(funding_disruption),
             residence_status=residence, academic_standing=standing,
             year_outcome=year_outcome, year_failure_label=year_failed, dropout_label=dropped_out,
-            delayed_graduation_label=int(graduated and year_of_study > max_years),
+            # N+1 grace period, not any overrun at all: UFS General Academic Rules and
+            # Regulations 2026, A21.9.1(a)(i) sets the honours-degree readmission review
+            # point at "minimum duration... plus one (1) year" rather than the bare
+            # minimum — a student finishing one year over minimum is normal, not delayed.
+            delayed_graduation_label=int(graduated and year_of_study > max_years + 1),
         ))
 
         if dropped_out or graduated:
@@ -385,9 +397,9 @@ weekly_df.to_csv(f"{OUT}/weekly_engagement_sample.csv", index=False)
 qual_rows = []
 for name, q in QUALIFICATIONS.items():
     qual_rows.append(dict(
-        programme=name, faculty=q["faculty"], saqa_id=(q["saqa_id"] or ""),
-        nqf_level=q["nqf_level"], min_credits=q["min_credits"], min_years_to_complete=q["min_years"],
-        qualification_type=q["qualification_type"], source=q["source"],
+        programme=name, faculty=q["faculty"], department=q["department"], academic_career=ACADEMIC_CAREER,
+        saqa_id=(q["saqa_id"] or ""), nqf_level=q["nqf_level"], min_credits=q["min_credits"],
+        min_years_to_complete=q["min_years"], qualification_type=q["qualification_type"], source=q["source"],
     ))
 pd.DataFrame(qual_rows).to_csv(f"{OUT}/qualifications.csv", index=False)
 

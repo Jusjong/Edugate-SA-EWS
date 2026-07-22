@@ -117,6 +117,66 @@ code { color: var(--accent-strong); }
 .app-main { flex: 1; padding: 20px 26px 60px; min-width: 0; }
 
 /* ---------------------------------------------------------------------
+   Advisor hierarchy rail — Faculty > Department > Academic Career >
+   Programme > Student. Pages/Advisor.razor only (Convenor is module-scoped,
+   not hierarchy-scoped — Sec. 4.5 routes module flags to the lecturer, not
+   through the faculty tree).
+--------------------------------------------------------------------- */
+.body-layout { display: flex; align-items: flex-start; gap: 0; margin: -20px -26px; }
+.rail {
+    width: 280px; flex-shrink: 0; padding: 18px 14px 40px;
+    border-right: 1px solid var(--line); background: var(--surface);
+    position: sticky; top: 0; align-self: flex-start; max-height: 100vh; overflow-y: auto;
+}
+.rail h2 { font-size: 0.95rem; margin-bottom: 4px; }
+.rail .rail-sub { color: var(--slate); font-size: 12px; margin-bottom: 14px; display: block; }
+.roster-col { flex: 1; min-width: 0; padding: 20px 26px 60px; }
+
+.tree-reset {
+    width: 100%; text-align: left; background: var(--surface-2); border: 1px solid transparent;
+    border-radius: 7px; padding: 8px 10px; font-size: 13px; font-weight: 600; color: var(--ink);
+    cursor: pointer; margin-bottom: 12px;
+}
+.tree-reset.active { border-color: var(--accent); color: var(--accent-strong); background: var(--risk-low-bg); }
+.tree-reset:hover { background: var(--surface-3); }
+
+details.node { border-left: 2px solid transparent; margin-left: 2px; }
+details.node > summary {
+    list-style: none; cursor: pointer; padding: 6px 6px 6px 4px; border-radius: 6px;
+    font-size: 13px; font-weight: 600; color: var(--ink);
+    display: flex; align-items: center; gap: 6px;
+}
+details.node > summary::-webkit-details-marker { display: none; }
+details.node > summary::before {
+    content: "▸"; display: inline-block; font-size: 10px; color: var(--slate-soft);
+    transition: transform .12s; width: 10px; flex-shrink: 0;
+}
+details.node[open] > summary::before { transform: rotate(90deg); }
+details.node > summary:hover { background: var(--surface-2); }
+details.node > summary.selected { background: var(--risk-low-bg); color: var(--accent-strong); }
+.node-children { margin-left: 13px; border-left: 1px solid var(--line); padding-left: 8px; }
+.node-count { margin-left: auto; color: var(--slate-soft); font-family: var(--font-mono); font-size: 11px; font-weight: 400; }
+
+.prog-btn {
+    display: flex; width: 100%; align-items: center; text-align: left; background: transparent; border: none;
+    padding: 5px 8px; margin: 1px 0; font-size: 12.5px; color: var(--slate); border-radius: 6px; cursor: pointer;
+}
+.prog-btn:hover { background: var(--surface-2); color: var(--ink); }
+.prog-btn.active { background: var(--risk-low-bg); color: var(--accent-strong); font-weight: 700; }
+.prog-btn .count { margin-left: auto; color: var(--slate-soft); font-family: var(--font-mono); font-size: 11px; }
+
+.rail-note {
+    margin-top: 18px; padding: 11px 12px; background: var(--surface-2); border-radius: 8px;
+    font-size: 12px; color: var(--slate); line-height: 1.5;
+}
+.rail-note strong { color: var(--ink); display: block; margin-bottom: 3px; font-size: 12.5px; }
+
+@media (max-width: 900px) {
+    .body-layout { flex-direction: column; }
+    .rail { width: 100%; border-right: none; border-bottom: 1px solid var(--line); position: static; max-height: none; }
+}
+
+/* ---------------------------------------------------------------------
    Roster grid + risk cards — shared by Pages/Advisor.razor and Convenor.razor
 --------------------------------------------------------------------- */
 .roster-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 6px; flex-wrap: wrap; }
@@ -252,6 +312,51 @@ code { color: var(--accent-strong); }
 
 .drawer-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 22px; }
 .drawer-actions .btn { width: 100%; padding: 10px; font-size: 13px; text-align: center; }
+
+/* ---------------------------------------------------------------------
+   "How this was calculated" hover tooltip — Components/CalcTooltip.razor
+--------------------------------------------------------------------- */
+.sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+.calc-trigger { position: relative; display: inline-flex; align-items: center; justify-content: center; margin-left: 2px; padding: 6px; margin: -6px -6px -6px -4px; cursor: help; border-radius: 50%; }
+.calc-trigger:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.info-dot { color: var(--slate-soft); font-size: 13px; line-height: 1; }
+.calc-trigger:hover .info-dot, .calc-trigger:focus .info-dot, .calc-trigger:focus-within .info-dot { color: var(--accent); }
+
+.calc-popover {
+    position: absolute; z-index: 30; top: 100%; left: 50%; transform: translate(-50%, 6px) scale(0.98);
+    width: 300px; max-width: 80vw; max-height: 320px; overflow-y: auto;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: 0 10px 30px var(--shadow); padding: 12px 14px;
+    opacity: 0; pointer-events: none; transition: opacity .12s, transform .12s;
+    text-align: left; font-weight: 400;
+}
+.calc-trigger:hover .calc-popover, .calc-trigger:focus .calc-popover, .calc-trigger:focus-within .calc-popover {
+    opacity: 1; pointer-events: auto; transform: translate(-50%, 6px) scale(1);
+}
+
+.calc-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.calc-sub { font-size: 10.5px; color: var(--slate); margin-bottom: 8px; line-height: 1.4; }
+.calc-table { display: flex; flex-direction: column; }
+.calc-row {
+    display: flex; align-items: baseline; gap: 6px; padding: 3px 0; border-bottom: 1px solid var(--line);
+    font-size: 11px;
+}
+.calc-row:last-child { border-bottom: none; }
+.calc-label { flex: 1; color: var(--ink); min-width: 0; }
+.calc-expr { color: var(--slate-soft); font-family: var(--font-mono); font-size: 10px; white-space: nowrap; }
+.calc-contrib { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.calc-contrib.pos { color: var(--risk-critical); }
+.calc-contrib.neg { color: var(--risk-low); }
+.calc-row.calc-intercept { color: var(--slate); font-style: italic; }
+.calc-row.calc-intercept .calc-contrib { color: var(--slate); font-style: normal; }
+.calc-row.calc-sum { border-top: 2px solid var(--line); margin-top: 2px; font-weight: 700; }
+.calc-row.calc-sum .calc-label, .calc-row.calc-sum .calc-contrib { color: var(--ink); }
+.calc-formula { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--slate); text-align: center; }
+.calc-formula b { color: var(--ink); font-family: var(--font-mono); }
 
 /* ---------------------------------------------------------------------
    Blazor framework hooks (restyled to the token palette, not removed —

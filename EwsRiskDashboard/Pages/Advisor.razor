@@ -10,43 +10,66 @@
 }
 else
 {
-    var filtered = _selectedYear is null ? _students : _students.Where(s => s.YearOfStudy == _selectedYear).ToList();
+    var hierarchyFiltered = _selectedField is null ? _students : _students.Where(s => _selectedField switch
+    {
+        "faculty" => s.Faculty == _selectedValue,
+        "department" => s.Department == _selectedValue,
+        "career" => s.AcademicCareer == _selectedValue,
+        "programme" => s.Programme == _selectedValue,
+        _ => true,
+    }).ToList();
+    var filtered = _selectedYear is null ? hierarchyFiltered : hierarchyFiltered.Where(s => s.YearOfStudy == _selectedYear).ToList();
     var sorted = filtered.OrderByDescending(s => s.Risk).ToList();
-    var years = _students.Select(s => s.YearOfStudy).Distinct().OrderBy(y => y).ToList();
+    var years = hierarchyFiltered.Select(s => s.YearOfStudy).Distinct().OrderBy(y => y).ToList();
 
-    <div class="roster-head">
-        <div>
-            <h1>Advisor caseload</h1>
-            <div class="roster-sub">@sorted.Count students · sorted by risk</div>
-        </div>
-        <div class="sort-control">
-            <select @onchange="OnYearChanged">
-                <option value="">All years of study</option>
-                @foreach (var y in years)
+    <div class="body-layout">
+        <HierarchyRail Students="@_students" SelectedField="@_selectedField" SelectedValue="@_selectedValue"
+                        OnSelect="@(sel => { _selectedField = sel.Field; _selectedValue = sel.Value; _selectedYear = null; })"
+                        OnReset="@(() => { _selectedField = null; _selectedValue = null; })" />
+
+        <div class="roster-col">
+            <div class="roster-head">
+                <div>
+                    <h1>Advisor caseload</h1>
+                    <div class="roster-sub">@sorted.Count students · sorted by risk</div>
+                </div>
+                <div class="sort-control">
+                    <select @onchange="OnYearChanged">
+                        <option value="">All years of study</option>
+                        @foreach (var y in years)
+                        {
+                            <option value="@y" selected="@(_selectedYear == y)">Year @y</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="roster-annot">
+                Every currently-active student (year-outcome progressed/repeated) as of the most recent intake
+                cohort's calendar year — not each student's final simulated row, which skews toward already-far-behind
+                stragglers and silently excludes 1st/2nd-years. Capped to 15 highest + 5 lowest risk per department so
+                every node in the hierarchy stays populated without shipping the full ~1,100-student snapshot. Each
+                card also carries a separate delayed-graduation risk (Model C), trained only on graduated students'
+                pre-entry profile and pace — never on year-of-study itself.
+            </div>
+
+            <div class="grid">
+                @foreach (var s in sorted)
                 {
-                    <option value="@y" selected="@(_selectedYear == y)">Year @y</option>
+                    <RiskCard @key="s.Id" Id="@s.Id" Subtitle="@s.Programme" Risk="@s.Risk" Tier="@s.Tier" Factors="@s.Factors"
+                              Calculation="@s.Calculation" CalculationLabel="Year-failure model"
+                              PaceBadge="@($"Year {s.YearOfStudy} of {s.MinYearsToComplete}")" PaceOverdue="@s.OverMinimumDuration"
+                              SecondaryLabel="Delayed-graduation risk" SecondaryRisk="@s.DelayedGradRisk" SecondaryTier="@s.DelayedGradTier"
+                              SecondaryCalculation="@s.DelayedGradCalculation" SecondaryCalculationLabel="Delayed-graduation model"
+                              IsFlagged="@_flagged.Contains(s.Id)" IsLogged="@_logged.Contains(s.Id)"
+                              OnToggleFlag="@(() => ToggleFlag(s.Id))" OnLogIntervention="@(() => LogIntervention(s.Id))"
+                              OnCardClick="@(() => OpenDrawer(s.Id))" />
                 }
-            </select>
+                @if (sorted.Count == 0)
+                {
+                    <div class="empty-state">No students match this selection.</div>
+                }
+            </div>
         </div>
-    </div>
-    <div class="roster-annot">
-        Cross-module caseload for this advisor's students, ranked by year-failure risk, spanning every year
-        of study rather than just first-years — context features (quintile, funding status) persist across
-        the full study lifecycle instead of fading after entry (v1.7). Each card also carries a separate
-        delayed-graduation risk (Model C), trained only on graduated students' pre-entry profile and pace —
-        never on year-of-study itself, since that would just re-derive the label's own definition.
-    </div>
-
-    <div class="grid">
-        @foreach (var s in sorted)
-        {
-            <RiskCard Id="@s.Id" Subtitle="@s.Programme" Risk="@s.Risk" Tier="@s.Tier" Factors="@s.Factors"
-                      PaceBadge="@($"Year {s.YearOfStudy} of {s.MinYearsToComplete}")" PaceOverdue="@s.OverMinimumDuration"
-                      SecondaryLabel="Delayed-graduation risk" SecondaryRisk="@s.DelayedGradRisk" SecondaryTier="@s.DelayedGradTier"
-                      IsFlagged="@_flagged.Contains(s.Id)" IsLogged="@_logged.Contains(s.Id)"
-                      OnToggleFlag="@(() => ToggleFlag(s.Id))" OnLogIntervention="@(() => LogIntervention(s.Id))"
-                      OnCardClick="@(() => OpenDrawer(s.Id))" />
-        }
     </div>
 
     <StudentDrawer Student="@_openStudent"
@@ -60,6 +83,8 @@ else
 @code {
     private List<AdvisorStudent>? _students;
     private int? _selectedYear;
+    private string? _selectedField;
+    private string? _selectedValue;
     private AdvisorStudent? _openStudent;
     private readonly HashSet<string> _flagged = [];
     private readonly HashSet<string> _logged = [];
