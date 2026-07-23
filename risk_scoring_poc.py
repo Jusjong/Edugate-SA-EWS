@@ -266,8 +266,8 @@ active["delayed_grad_proba"] = clf_c.predict_proba(Xc_active)[:, 1]
 # caseload used, just applied per department so every node in the Faculty >
 # Department > Academic Career > Programme > Student hierarchy stays
 # populated instead of collapsing to a handful of departments.
-CASELOAD_HIGH_PER_DEPT = 15
-CASELOAD_LOW_PER_DEPT = 5
+CASELOAD_HIGH_PER_DEPT = 6
+CASELOAD_LOW_PER_DEPT = 2
 sampled = []
 for _, grp in active.groupby(["faculty", "department"]):
     grp_sorted = grp.sort_values("year_failure_proba", ascending=False)

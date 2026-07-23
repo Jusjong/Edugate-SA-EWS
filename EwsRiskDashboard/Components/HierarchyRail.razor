@@ -14,7 +14,7 @@
     {
         <details class="node" @key="facultyGroup.Key" open="@IsAncestorOf("faculty", facultyGroup.Key)">
             <summary class="@(IsSelected("faculty", facultyGroup.Key) ? "selected" : "")"
-                     @onclick="@(() => Select("faculty", facultyGroup.Key))" @onclick:stopPropagation="true">
+                     @onclick="@(() => Select("faculty", facultyGroup.Key))" @onclick:stopPropagation="true" @onclick:preventDefault="true">
                 @facultyGroup.Key <span class="node-count">@facultyGroup.Count()</span>
             </summary>
             <div class="node-children">
@@ -22,7 +22,7 @@
                 {
                     <details class="node" @key="deptGroup.Key" open="@IsAncestorOf("department", deptGroup.Key)">
                         <summary class="@(IsSelected("department", deptGroup.Key) ? "selected" : "")"
-                                 @onclick="@(() => Select("department", deptGroup.Key))" @onclick:stopPropagation="true">
+                                 @onclick="@(() => Select("department", deptGroup.Key))" @onclick:stopPropagation="true" @onclick:preventDefault="true">
                             @deptGroup.Key <span class="node-count">@deptGroup.Count()</span>
                         </summary>
                         <div class="node-children">
@@ -30,7 +30,7 @@
                             {
                                 <details class="node" @key="careerGroup.Key" open="@IsAncestorOf("career", careerGroup.Key)">
                                     <summary class="@(IsSelected("career", careerGroup.Key) ? "selected" : "")"
-                                             @onclick="@(() => Select("career", careerGroup.Key))" @onclick:stopPropagation="true">
+                                             @onclick="@(() => Select("career", careerGroup.Key))" @onclick:stopPropagation="true" @onclick:preventDefault="true">
                                         @careerGroup.Key <span class="node-count">@careerGroup.Count()</span>
                                     </summary>
                                     <div class="node-children">
