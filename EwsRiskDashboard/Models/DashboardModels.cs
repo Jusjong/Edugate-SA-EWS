@@ -31,13 +31,25 @@ public record RiskFactor
 // The complete, literal arithmetic behind a risk score — every feature's
 // coefficient * standardized_value, the intercept, and the sigmoid step —
 // not just the top-3 summary. Powers the "how was this calculated" hover
-// tooltip (Components/CalcTooltip.razor).
+// tooltip (Components/CalcTooltip.razor) AND the "what if" editor
+// (Components/WhatIfEditor.razor): RawValue/Mean/Scale let the client
+// standardize an edited raw value the same way the model was trained
+// ((edited - Mean) / Scale) and recompute a real prediction client-side —
+// not a mocked estimate.
 public record CalcTerm
 {
+    public required string Key { get; init; } // python feature name — shared across models for the same trait
     public required string Label { get; init; }
     public double Coefficient { get; init; }
     public double StandardizedValue { get; init; }
+    public double RawValue { get; init; }
+    public double Mean { get; init; }
+    public double Scale { get; init; }
     public double Contribution { get; init; }
+    public required string Kind { get; init; } // "boolean" | "continuous" | "fixed" (not editable)
+    public double? Min { get; init; }
+    public double? Max { get; init; }
+    public double? Step { get; init; }
 }
 
 public record CalculationBreakdown

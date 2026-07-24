@@ -1,0 +1,206 @@
+@* Edit a student's raw feature values — and their modules' attendance,
+   submissions, formative marks etc. — and see the year-failure and
+   delayed-graduation risk recompute live. This is a real forward pass of
+   the exact same logistic regression exposed in the "how was this
+   calculated" tooltip — (edited - mean) / scale, x coefficient, summed,
+   sigmoid — not a mocked-up estimate. Editing a module doesn't just change
+   that module's own risk: its average (with the others) is itself a real
+   input feature to the year-failure model (avg_module_risk — the design
+   doc's Sec. 4.5 "module risk roll-up"), so module edits cascade into the
+   year-failure number too, not only their own module's card. *@
+
+<div class="whatif">
+    <div class="whatif-head">
+        <span class="drawer-section-title" style="margin:0;">What if…</span>
+        @if (_dirty)
+        {
+            <button class="btn btn-ghost whatif-reset" @onclick="Reset">Reset to actual</button>
+        }
+    </div>
+
+    <div class="whatif-results">
+        <div class="whatif-result">
+            <span class="whatif-result-label">Year-failure risk</span>
+            <span class="whatif-result-nums">
+                <span class="whatif-actual">@ActualYearRisk.ToString("0")%</span>
+                @if (_dirty)
+                {
+                    <span class="whatif-arrow">→</span>
+                    <span class="whatif-sim @(SimYearRisk > ActualYearRisk ? "up" : SimYearRisk < ActualYearRisk ? "down" : "")">@SimYearRisk.ToString("0")%</span>
+                }
+            </span>
+        </div>
+        <div class="whatif-result">
+            <span class="whatif-result-label">Delayed-graduation risk</span>
+            <span class="whatif-result-nums">
+                <span class="whatif-actual">@ActualGradRisk.ToString("0")%</span>
+                @if (_dirty)
+                {
+                    <span class="whatif-arrow">→</span>
+                    <span class="whatif-sim @(SimGradRisk > ActualGradRisk ? "up" : SimGradRisk < ActualGradRisk ? "down" : "")">@SimGradRisk.ToString("0")%</span>
+                }
+            </span>
+        </div>
+    </div>
+
+    <div class="whatif-fields">
+        @foreach (var f in _fields)
+        {
+            <div class="whatif-field">
+                <label>@f.Label</label>
+                @if (f.Kind == "boolean")
+                {
+                    <input type="checkbox" checked="@(_overrides[f.Key] >= 0.5)"
+                           @onchange="@((ChangeEventArgs e) => SetValue(f.Key, (bool)(e.Value ?? false) ? 1 : 0))" />
+                }
+                else if (f.Kind == "continuous")
+                {
+                    <div class="whatif-slider-row">
+                        <input type="range" min="@f.Min" max="@f.Max" step="@(f.Step ?? 1)"
+                               value="@_overrides[f.Key]"
+                               @oninput="@((ChangeEventArgs e) => SetValue(f.Key, double.Parse((string)e.Value!, System.Globalization.CultureInfo.InvariantCulture)))" />
+                        <span class="whatif-value">@_overrides[f.Key].ToString("0.##")</span>
+                    </div>
+                }
+                else if (f.Kind == "derived")
+                {
+                    <span class="whatif-fixed-value">@((AvgModuleRiskLive() * 100).ToString("0"))% <em>(from modules below)</em></span>
+                }
+                else
+                {
+                    <span class="whatif-fixed-value">@f.FixedDisplay <em>(fixed)</em></span>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="whatif-modules-title">Modules feeding the average above</div>
+    <div class="whatif-modules">
+        @foreach (var m in Student.Modules)
+        {
+            var live = ModuleRiskLive(m) * 100;
+            <div class="whatif-module">
+                <div class="whatif-module-head">
+                    <span class="whatif-module-code">@m.Module</span>
+                    <span class="whatif-result-nums">
+                        <span class="whatif-actual">@m.Risk.ToString("0")%</span>
+                        @if (Math.Abs(live - m.Risk) > 0.5)
+                        {
+                            <span class="whatif-arrow">→</span>
+                            <span class="whatif-sim @(live > m.Risk ? "up" : "down")">@live.ToString("0")%</span>
+                        }
+                    </span>
+                </div>
+                @foreach (var t in m.Calculation.Terms)
+                {
+                    <div class="whatif-field whatif-module-field">
+                        <label>@t.Label</label>
+                        <div class="whatif-slider-row">
+                            <input type="range" min="@t.Min" max="@t.Max" step="@(t.Step ?? 1)"
+                                   value="@_moduleOverrides[m.Module][t.Key]"
+                                   @oninput="@((ChangeEventArgs e) => SetModuleValue(m.Module, t.Key, double.Parse((string)e.Value!, System.Globalization.CultureInfo.InvariantCulture)))" />
+                            <span class="whatif-value">@_moduleOverrides[m.Module][t.Key].ToString("0.##")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public AdvisorStudent Student { get; set; } = null!;
+
+    private record Field(string Key, string Label, string Kind, double? Min, double? Max, double? Step, string FixedDisplay);
+
+    private List<Field> _fields = [];
+    private Dictionary<string, double> _overrides = [];
+    private Dictionary<string, Dictionary<string, double>> _moduleOverrides = [];
+    private string? _studentId;
+
+    private double ActualYearRisk => Student.Risk;
+    private double ActualGradRisk => Student.DelayedGradRisk;
+    private double SimYearRisk => Recompute(Student.Calculation) * 100;
+    private double SimGradRisk => Recompute(Student.DelayedGradCalculation) * 100;
+
+    private bool _dirty =>
+        _fields.Any(f => f.Kind != "fixed" && f.Kind != "derived" && Math.Abs(_overrides[f.Key] - OriginalValue(f.Key)) > 0.001)
+        || Student.Modules.Any(m => m.Calculation.Terms.Any(t => Math.Abs(_moduleOverrides[m.Module][t.Key] - t.RawValue) > 0.001));
+
+    protected override void OnParametersSet()
+    {
+        if (_studentId == Student.Id) return;
+        _studentId = Student.Id;
+
+        var byKey = new Dictionary<string, CalcTerm>();
+        foreach (var t in Student.Calculation.Terms.Concat(Student.DelayedGradCalculation.Terms))
+        {
+            byKey.TryAdd(t.Key, t);
+        }
+
+        _fields = byKey.Values.Select(t => new Field(
+            t.Key, t.Label, t.Kind, t.Min, t.Max, t.Step,
+            t.Kind == "fixed" ? t.RawValue.ToString("0.##") : ""
+        )).OrderBy(f => f.Label).ToList();
+
+        _overrides = byKey.Values.ToDictionary(t => t.Key, t => t.RawValue);
+
+        _moduleOverrides = Student.Modules.ToDictionary(
+            m => m.Module,
+            m => m.Calculation.Terms.ToDictionary(t => t.Key, t => t.RawValue)
+        );
+    }
+
+    private double OriginalValue(string key)
+    {
+        var term = Student.Calculation.Terms.FirstOrDefault(t => t.Key == key)
+            ?? Student.DelayedGradCalculation.Terms.FirstOrDefault(t => t.Key == key);
+        return term?.RawValue ?? 0;
+    }
+
+    private double ModuleRiskLive(ModuleRisk m)
+    {
+        var logit = m.Calculation.Intercept;
+        var overrides = _moduleOverrides[m.Module];
+        foreach (var t in m.Calculation.Terms)
+        {
+            var raw = overrides.GetValueOrDefault(t.Key, t.RawValue);
+            var std = (raw - t.Mean) / t.Scale;
+            logit += t.Coefficient * std;
+        }
+        return 1.0 / (1.0 + Math.Exp(-logit));
+    }
+
+    private double AvgModuleRiskLive() =>
+        Student.Modules.Count == 0 ? 0 : Student.Modules.Average(ModuleRiskLive);
+
+    private double Recompute(CalculationBreakdown calc)
+    {
+        var logit = calc.Intercept;
+        foreach (var t in calc.Terms)
+        {
+            var raw = t.Key == "avg_module_risk" ? AvgModuleRiskLive() : _overrides.GetValueOrDefault(t.Key, t.RawValue);
+            var std = (raw - t.Mean) / t.Scale;
+            logit += t.Coefficient * std;
+        }
+        return 1.0 / (1.0 + Math.Exp(-logit));
+    }
+
+    private void SetValue(string key, double value) => _overrides[key] = value;
+    private void SetModuleValue(string module, string key, double value) => _moduleOverrides[module][key] = value;
+
+    private void Reset()
+    {
+        foreach (var f in _fields.Where(f => f.Kind != "fixed" && f.Kind != "derived"))
+        {
+            _overrides[f.Key] = OriginalValue(f.Key);
+        }
+        foreach (var m in Student.Modules)
+        {
+            foreach (var t in m.Calculation.Terms)
+            {
+                _moduleOverrides[m.Module][t.Key] = t.RawValue;
+            }
+        }
+    }
+}

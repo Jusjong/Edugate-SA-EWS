@@ -70,27 +70,67 @@ def tier_of(p):
         return "medium"
     return "low"
 
-def full_breakdown(coef, intercept, xs, feat_names, label_map):
+# Per-feature editing metadata for the advisor "what-if" editor — lets the UI
+# recompute risk client-side from an edited raw value using the exact same
+# scaler mean/scale and coefficient already exposed for the tooltip, rather
+# than a fake heuristic. "fixed" features (programme-level constants, not a
+# student trait) are shown read-only — editing "programme minimum duration"
+# for one student isn't a meaningful what-if.
+FEATURE_META = {
+    "school_quintile": {"kind": "continuous", "min": 1, "max": 5, "step": 1},
+    "first_gen_flag": {"kind": "boolean"},
+    "home_language_eal_flag": {"kind": "boolean"},
+    "nbt_academic_literacy": {"kind": "continuous", "min": 0, "max": 100, "step": 1},
+    "nbt_quantitative_literacy": {"kind": "continuous", "min": 0, "max": 100, "step": 1},
+    "nbt_mathematics": {"kind": "continuous", "min": 0, "max": 100, "step": 1},
+    "matric_aggregate_pct": {"kind": "continuous", "min": 0, "max": 100, "step": 1},
+    "aps_score": {"kind": "continuous", "min": 15, "max": 42, "step": 1},
+    "nsfas_eligible_initial": {"kind": "boolean"},
+    "funding_disruption_flag": {"kind": "boolean"},
+    "year_of_study": {"kind": "continuous", "min": 1, "max": 10, "step": 1},
+    "credit_pace_ratio": {"kind": "continuous", "min": 0, "max": 1, "step": 0.01},
+    "min_years_to_complete": {"kind": "fixed"},
+    # Not a direct slider — recomputed client-side as the mean of the
+    # student's (possibly edited) module risks, then fed into Model B.
+    "avg_module_risk": {"kind": "derived", "min": 0, "max": 1, "step": 0.01},
+    "mid_wave_attendance_pct": {"kind": "continuous", "min": 0, "max": 100, "step": 1},
+    "mid_wave_submission_rate": {"kind": "continuous", "min": 0, "max": 1, "step": 0.01},
+    "mid_wave_formative_avg": {"kind": "continuous", "min": 0, "max": 100, "step": 1},
+    "engagement_consistency_score": {"kind": "continuous", "min": 0, "max": 1, "step": 0.01},
+    "prereq": {"kind": "continuous", "min": 0, "max": 100, "step": 1},
+}
+
+def full_breakdown(coef, intercept, xs_std, xs_raw, mean_, scale_, feat_names, label_map):
     """The complete, literal arithmetic behind a risk score — every feature's
     coefficient * standardized_value, the intercept, and the sigmoid step —
     not just the top-3 summary. Feeds the "how was this calculated" hover
-    tooltip in the UI. logit/probability are computed from full-precision
-    values (matching predict_proba exactly); individual terms are rounded
-    only for display, so their displayed sum may be off by a cent or two."""
+    tooltip AND the "what if" editor: each term also carries its raw value
+    plus the scaler's mean/scale, so the client can standardize an EDITED raw
+    value the same way ((edited - mean) / scale) and recompute a real
+    prediction, not a mocked-up estimate. logit/probability are computed from
+    full-precision values (matching predict_proba exactly); individual terms
+    are rounded only for display, so their displayed sum may be off by a cent
+    or two."""
     raw_terms = [
-        (label_map[name], float(coef[i]), float(xs[i]), float(coef[i] * xs[i]))
+        (name, label_map[name], float(coef[i]), float(xs_std[i]), float(xs_raw[i]),
+         float(mean_[i]), float(scale_[i]), float(coef[i] * xs_std[i]))
         for i, name in enumerate(feat_names)
     ]
-    raw_terms.sort(key=lambda t: -abs(t[3]))
-    logit = float(intercept) + sum(t[3] for t in raw_terms)
+    raw_terms.sort(key=lambda t: -abs(t[7]))
+    logit = float(intercept) + sum(t[7] for t in raw_terms)
     probability = 1 / (1 + np.exp(-logit))
     return {
         "intercept": round(float(intercept), 3),
         "logit": round(logit, 3),
         "probability": round(float(probability), 4),
         "terms": [
-            {"label": l, "coefficient": round(c, 3), "standardizedValue": round(v, 3), "contribution": round(contrib, 3)}
-            for (l, c, v, contrib) in raw_terms
+            {
+                "key": key, "label": label, "coefficient": round(c, 4),
+                "standardizedValue": round(v, 3), "rawValue": round(raw, 3),
+                "mean": round(m, 4), "scale": round(s, 4), "contribution": round(contrib, 3),
+                **FEATURE_META.get(key, {"kind": "continuous"}),
+            }
+            for (key, label, c, v, raw, m, s, contrib) in raw_terms
         ],
     }
 
@@ -142,7 +182,10 @@ def modules_for(student_id, academic_year):
             "risk": round(float(r.risk_proba) * 100, 0),
             "tier": tier_of(r.risk_proba),
             "factors": contributions_a(i),
-            "calculation": full_breakdown(clf_a.coef_[0], clf_a.intercept_[0], Xas[i], feat_a, label_a),
+            "calculation": full_breakdown(
+                clf_a.coef_[0], clf_a.intercept_[0], Xas[i], Xa[i],
+                scaler_a.mean_, scaler_a.scale_, feat_a, label_a
+            ),
         })
     return result
 
@@ -160,7 +203,10 @@ for pos in sub.head(14).index:
         "risk": round(float(row.risk_proba) * 100, 0),
         "tier": tier_of(row.risk_proba),
         "factors": contributions_a(i),
-        "calculation": full_breakdown(clf_a.coef_[0], clf_a.intercept_[0], Xas[i], feat_a, label_a),
+        "calculation": full_breakdown(
+            clf_a.coef_[0], clf_a.intercept_[0], Xas[i], Xa[i],
+            scaler_a.mean_, scaler_a.scale_, feat_a, label_a
+        ),
     })
 
 # ---------------------------------------------------------------------
@@ -188,18 +234,32 @@ active_latest = sy_current[sy_current.year_outcome.isin(["progressed", "repeated
 # Model B — year-level failure risk (advisor view)
 # Trained across every student-year row, not just year 1, so it scores
 # students at whatever year of study they're currently in.
+#
+# avg_module_risk (v2): the mean of Model A's predicted module-failure
+# probability across a student's modules that year. This is the actual
+# "roll-up" the design doc describes (Sec. 4.5: "module risks roll up into
+# the student-level year-failure score") — legitimate, not circular, because
+# generate.py defines year_failed as (module_fail_rate > 0.5) OR a separate
+# random term, so module performance is one real causal input among several,
+# not a deterministic recovery of the label the way year_of_study was for
+# delayed_graduation_label. Missing for the handful of student-years with no
+# module rows on file; filled with the population mean for those.
 # ---------------------------------------------------------------------
-feat_b = pre_entry_feats + ["funding_disruption_flag", "year_of_study"]
+module_risk_by_year = me.groupby(["student_id", "academic_year"])["risk_proba"].mean().rename("avg_module_risk")
+
+feat_b = pre_entry_feats + ["funding_disruption_flag", "year_of_study", "avg_module_risk"]
 label_b = {
     "school_quintile": "School quintile", "first_gen_flag": "First-generation student",
     "home_language_eal_flag": "English additional language", "nbt_academic_literacy": "NBT academic literacy",
     "nbt_quantitative_literacy": "NBT quantitative literacy", "nbt_mathematics": "NBT mathematics",
     "matric_aggregate_pct": "Matric aggregate", "aps_score": "APS score",
     "nsfas_eligible_initial": "NSFAS eligible", "funding_disruption_flag": "Funding disruption this year",
-    "year_of_study": "Year of study",
+    "year_of_study": "Year of study", "avg_module_risk": "Average module risk this year",
 }
 
 train_b = sy.merge(students[["student_id"] + pre_entry_feats], on="student_id", how="inner")
+train_b = train_b.merge(module_risk_by_year, on=["student_id", "academic_year"], how="left")
+train_b["avg_module_risk"] = train_b["avg_module_risk"].fillna(me["risk_proba"].mean())
 
 Xb = train_b[feat_b].values
 yb = train_b["year_failure_label"].values
@@ -254,11 +314,15 @@ active = active_latest.merge(
     students[["student_id", "programme", "faculty", "department", "academic_career", "min_years_to_complete"] + pre_entry_feats],
     on="student_id", how="inner"
 ).reset_index(drop=True)
+active = active.merge(module_risk_by_year, on=["student_id", "academic_year"], how="left")
+active["avg_module_risk"] = active["avg_module_risk"].fillna(me["risk_proba"].mean())
 
-Xb_active = scaler_b.transform(active[feat_b].values)
+Xb_active_raw = active[feat_b].values
+Xb_active = scaler_b.transform(Xb_active_raw)
 active["year_failure_proba"] = clf_b.predict_proba(Xb_active)[:, 1]
 
-Xc_active = scaler_c.transform(active[feat_c].values)
+Xc_active_raw = active[feat_c].values
+Xc_active = scaler_c.transform(Xc_active_raw)
 active["delayed_grad_proba"] = clf_c.predict_proba(Xc_active)[:, 1]
 
 # Cap per department rather than serving the full ~1,100 active students —
@@ -286,11 +350,17 @@ for pos in caseload.index:
         "yearOfStudy": int(row.year_of_study), "minYearsToComplete": int(row.min_years_to_complete),
         "risk": round(float(row.year_failure_proba) * 100, 0), "tier": tier_of(row.year_failure_proba),
         "factors": contributions_b(Xb_active[pos]),
-        "calculation": full_breakdown(clf_b.coef_[0], clf_b.intercept_[0], Xb_active[pos], feat_b, label_b),
+        "calculation": full_breakdown(
+            clf_b.coef_[0], clf_b.intercept_[0], Xb_active[pos], Xb_active_raw[pos],
+            scaler_b.mean_, scaler_b.scale_, feat_b, label_b
+        ),
         "delayedGradRisk": round(float(row.delayed_grad_proba) * 100, 0),
         "delayedGradTier": tier_of(row.delayed_grad_proba),
         "delayedGradFactors": contributions_c(Xc_active[pos]),
-        "delayedGradCalculation": full_breakdown(clf_c.coef_[0], clf_c.intercept_[0], Xc_active[pos], feat_c, label_c),
+        "delayedGradCalculation": full_breakdown(
+            clf_c.coef_[0], clf_c.intercept_[0], Xc_active[pos], Xc_active_raw[pos],
+            scaler_c.mean_, scaler_c.scale_, feat_c, label_c
+        ),
         "modules": modules_for(row.student_id, row.academic_year),
     })
 
